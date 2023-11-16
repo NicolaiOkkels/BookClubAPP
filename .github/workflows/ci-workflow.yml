@@ -1,0 +1,73 @@
+﻿name: .NET, React CI/CD workflow
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-test-business:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Out Repository
+        uses: actions/checkout@v2
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: 7.0.x
+
+      - name: Restore dependencies
+        run: dotnet restore BookClubApp.Business/BookClubApp.Business.csproj
+
+      - name: Build Business Layer
+        run: dotnet build BookClubApp.Business/BookClubApp.Business.csproj --no-restore
+
+      - name: Run Business Layer Tests
+        run: dotnet test BookClubApp.Business/Tests/BookClubApp.Business.Tests/BookClubApp.Business.Tests.csproj --no-restore
+
+  build-and-test-data-access:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Out Repository
+        uses: actions/checkout@v2
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: 7.0.x
+
+      - name: Restore dependencies
+        run: dotnet restore BookClubApp.DataAccess/BookClubApp.DataAccess.csproj
+
+      - name: Build DataAccessLayer
+        run: dotnet build BookClubApp.DataAccess/BookClubApp.DataAccess.csproj --no-restore
+
+      - name: Run DataAccessLayer Tests
+        run: dotnet test BookClubApp.DataAccess/Tests/BookClubApp.DataAccess.Tests/BookClubApp.DataAccess.Tests.csproj --no-restore
+
+  build-and-test-presentation:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Out Repository
+        uses: actions/checkout@v2
+
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "20.x"
+
+      - name: Install dependencies (Presentation)
+        run: npm ci
+        working-directory: BookClubApp.Presentation
+
+      - name: Run Presentation Layer Tests
+        run: npm test
+        working-directory: BookClubApp.Presentation
+
+      - name: Build Presentation Layer
+        run: npm run build
+        working-directory: BookClubApp.Presentation
