@@ -23,13 +23,13 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore BookClubApp.Business/BookClubApp.Business.csproj
 
-      - name: Build Business Layer
+      - name: Build
         run: dotnet build BookClubApp.Business/BookClubApp.Business.csproj --no-restore
 
-      - name: Restore dependencies
+      - name: Restore dependencies (Test)
         run: dotnet restore BookClubApp.Business/Tests/BookClubApp.Business.Tests/BookClubApp.Business.Tests.csproj
 
-      - name: Run Business Layer Tests
+      - name: Run test
         run: dotnet test BookClubApp.Business/Tests/BookClubApp.Business.Tests/BookClubApp.Business.Tests.csproj --no-restore
 
   build-and-test-data-access:
@@ -46,11 +46,14 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore BookClubApp.DataAccess/BookClubApp.DataAccess.csproj
 
-      - name: Build DataAccessLayer
+      - name: Build
         run: dotnet build BookClubApp.DataAccess/BookClubApp.DataAccess.csproj --no-restore
 
-      - name: Run DataAccessLayer Tests
-        run: dotnet test BookClubApp.DataAccess/Tests/BookClubApp.DataAccess.Tests/BookClubApp.DataAccess.Tests.csproj --no-restore
+      - name: Restore dependencies (Test)
+        run: dotnet restore BookClubApp.DataAccess/Tests/BookClubApp.DataAccessLayer.Tests/BookClubApp.DataAccess.Tests.csproj
+
+      - name: Run test
+        run: dotnet test BookClubApp.DataAccess/Tests/BookClubApp.DataAccessLayer.Tests/BookClubApp.DataAccess.Tests.csproj --no-restore
 
   build-and-test-presentation:
     runs-on: ubuntu-latest
