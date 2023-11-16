@@ -50,10 +50,10 @@ jobs:
         run: dotnet build BookClubApp.DataAccess/BookClubApp.DataAccess.csproj --no-restore
 
       - name: Restore dependencies (Test)
-        run: dotnet restore BookClubApp.DataAccess/Tests/BookClubApp.DataAccessLayer.Tests/BookClubApp.DataAccess.Tests.csproj
+        run: dotnet restore BookClubApp.DataAccess/Tests/BookClubApp.DataAccessLayer.Tests/BookClubApp.DataAccessLayer.Tests.csproj
 
       - name: Run test
-        run: dotnet test BookClubApp.DataAccess/Tests/BookClubApp.DataAccessLayer.Tests/BookClubApp.DataAccess.Tests.csproj --no-restore
+        run: dotnet test BookClubApp.DataAccess/Tests/BookClubApp.DataAccessLayer.Tests/BookClubApp.DataAccessLayer.Tests.csproj --no-restore
 
   build-and-test-presentation:
     runs-on: ubuntu-latest
