@@ -26,6 +26,9 @@ jobs:
       - name: Build Business Layer
         run: dotnet build BookClubApp.Business/BookClubApp.Business.csproj --no-restore
 
+      - name: Restore dependencies
+        run: dotnet restore BookClubApp.Business/Tests/BookClubApp.Business.Tests/BookClubApp.Business.Tests.csproj
+
       - name: Run Business Layer Tests
         run: dotnet test BookClubApp.Business/Tests/BookClubApp.Business.Tests/BookClubApp.Business.Tests.csproj --no-restore
 
