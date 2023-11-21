@@ -1,10 +1,10 @@
 using System.Collections.Generic;
-using BookClubApp.DataAccess.Models;
+using BookClubApp.DataAccess.Entities;
 
 namespace BookClubApp.DataAccess.Repositories
 {
     public interface IBookClubRepository
     {
-        IEnumerable<BookClub> GetAllBookClubs();
+        Task<IEnumerable<BookClub>> GetBookClubsAsync();        
     }
 }

@@ -4,18 +4,19 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BookClubApp.DataAccess.Repositories
 {
-    public class BookClubRepository : IBookClubRepository
+    public class MemberRepository : IMemberRepository
     {
         private readonly ApplicationDbContext _context;
 
-        public BookClubRepository(ApplicationDbContext context)
+        public MemberRepository(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        public async Task<IEnumerable<BookClub>> GetBookClubsAsync()
+        public async Task<IEnumerable<Member>> GetMembersAsync()
         {
-            return await _context.BookClubs.ToListAsync();
+            return await _context.Members.ToListAsync();
         }
     }
+
 }
