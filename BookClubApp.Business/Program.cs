@@ -2,6 +2,7 @@ using BookClubApp.DataAccess;
 using BookClubApp.DataAccess.Data;
 using BookClubApp.Business;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Writers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +16,10 @@ builder.Services.AddSwaggerGen();
 builder.Services.RegisterDataAccesDependencies(builder.Configuration);
 
 var app = builder.Build();
+
+using var scope = app.Services.CreateScope();
+
+await AutomatedMigration.MigrateAsync(scope.ServiceProvider);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
