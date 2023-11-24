@@ -19,7 +19,7 @@ var app = builder.Build();
 
 using var scope = app.Services.CreateScope();
 
-await AutomatedMigration.MigrateAsync(scope.ServiceProvider);
+//await AutomatedMigration.MigrateAsync(scope.ServiceProvider);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
