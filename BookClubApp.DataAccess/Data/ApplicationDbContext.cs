@@ -9,5 +9,12 @@ namespace BookClubApp.DataAccess.Data
         public DbSet<Member> Members { get; set; }
         public DbSet<BookClub> BookClubs { get; set; }
         public DbSet<Book> Books { get; set; }
+        public DbSet<Membership> Memberships { get; set; }
+        public DbSet<Role> Roles { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Membership>().HasKey(m=> new {m.MemberId, m.BookClubId, m.RoleId});
+        }
     }
 }
