@@ -9,6 +9,16 @@ namespace BookClubApp.Business.Services
         private readonly HttpClient _httpClient;
         private string baseURL = "https://opensearch.addi.dk/test_5.2/";
 
+        public SearchService(HttpClient httpClient)
+        {
+            _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
+        }
+
+        public SearchService()
+        {
+            _httpClient = new HttpClient();
+        }
+
         public async Task<Book> GetBookByIdentifier(string identifier)
         {
             var getObjectQuery = $"?action=getObject&identifier={identifier}&agency=100200&profile=test";
