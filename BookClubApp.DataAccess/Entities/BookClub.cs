@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace BookClubApp.DataAccess.Entities
 {
     public class BookClub
@@ -8,6 +10,6 @@ namespace BookClubApp.DataAccess.Entities
         public required string Type { get; set; }
         public required string Region { get; set; }
         public ICollection<Book> Books { get; set; }
-        public ICollection<Member> Members { get; set; }    
+        public virtual ICollection<Membership> Memberships { get; set; }
     }
 }
