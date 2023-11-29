@@ -14,5 +14,6 @@ public static class DataAccesDependencyInjection
                             opt => opt.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)));
         services.AddScoped<IBookClubRepository, BookClubRepository>();
         services.AddScoped<IMemberRepository, MemberRepository>();
+        services.AddScoped<IRatingRepository, RatingRepository>();
     }
 }

@@ -1,5 +1,3 @@
-
-using System.Collections.Generic;
 using BookClubApp.DataAccess.Entities;
 
 namespace BookClubApp.DataAccess.Repositories
