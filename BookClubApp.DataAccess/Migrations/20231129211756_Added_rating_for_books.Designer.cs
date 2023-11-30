@@ -4,6 +4,7 @@ using BookClubApp.DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookClubApp.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231129211756_Added_rating_for_books")]
+    partial class Added_rating_for_books
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -62,32 +65,6 @@ namespace BookClubApp.DataAccess.Migrations
                     b.HasIndex("BookClubId");
 
                     b.ToTable("Books");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Description = "Description of Book 1",
-                            ISBN = "978-3-16-148410-0",
-                            Identifier = "A123",
-                            Language = "English",
-                            Pages = "300",
-                            PublicationYear = 2020,
-                            Publisher = "Publisher 1",
-                            Title = "Sample Book 1"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Description = "Description of Book 2",
-                            ISBN = "978-1-23-456789-7",
-                            Identifier = "B456",
-                            Language = "Spanish",
-                            Pages = "250",
-                            PublicationYear = 2021,
-                            Publisher = "Publisher 2",
-                            Title = "Sample Book 2"
-                        });
                 });
 
             modelBuilder.Entity("BookClubApp.DataAccess.Entities.BookClub", b =>
@@ -117,24 +94,6 @@ namespace BookClubApp.DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("BookClubs");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Description = "Description of Book Club 1",
-                            Name = "Book Club 1",
-                            Region = "North America",
-                            Type = "Fiction"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Description = "Description of Book Club 2",
-                            Name = "Book Club 2",
-                            Region = "Europe",
-                            Type = "Non-Fiction"
-                        });
                 });
 
             modelBuilder.Entity("BookClubApp.DataAccess.Entities.Member", b =>
@@ -159,22 +118,6 @@ namespace BookClubApp.DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Members");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            BirthDate = new DateTime(1980, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "john.doe@example.com",
-                            Name = "John Doe"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            BirthDate = new DateTime(1990, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "jane.smith@example.com",
-                            Name = "Jane Smith"
-                        });
                 });
 
             modelBuilder.Entity("BookClubApp.DataAccess.Entities.Membership", b =>
@@ -195,20 +138,6 @@ namespace BookClubApp.DataAccess.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("Memberships");
-
-                    b.HasData(
-                        new
-                        {
-                            MemberId = 1,
-                            BookClubId = 1,
-                            RoleId = 1
-                        },
-                        new
-                        {
-                            MemberId = 2,
-                            BookClubId = 1,
-                            RoleId = 2
-                        });
                 });
 
             modelBuilder.Entity("BookClubApp.DataAccess.Entities.Rating", b =>
@@ -230,22 +159,6 @@ namespace BookClubApp.DataAccess.Migrations
                     b.HasIndex("BookId");
 
                     b.ToTable("Ratings");
-
-                    b.HasData(
-                        new
-                        {
-                            MemberId = 1,
-                            BookId = 1,
-                            Id = 1,
-                            Score = 5
-                        },
-                        new
-                        {
-                            MemberId = 1,
-                            BookId = 2,
-                            Id = 2,
-                            Score = 4
-                        });
                 });
 
             modelBuilder.Entity("BookClubApp.DataAccess.Entities.Role", b =>
@@ -263,23 +176,6 @@ namespace BookClubApp.DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Roles");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "Member"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "Book Club Owner"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Name = "Admin"
-                        });
                 });
 
             modelBuilder.Entity("BookClubApp.DataAccess.Entities.Book", b =>

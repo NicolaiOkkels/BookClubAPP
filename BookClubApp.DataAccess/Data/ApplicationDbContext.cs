@@ -12,9 +12,12 @@ namespace BookClubApp.DataAccess.Data
         public DbSet<Membership> Memberships { get; set; }
         public DbSet<Role> Roles { get; set; }
 
+        public DbSet<Rating> Ratings { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Membership>().HasKey(m => new { m.MemberId, m.BookClubId, m.RoleId });
+            modelBuilder.Entity<Membership>().HasKey(m=> new {m.MemberId, m.BookClubId, m.RoleId});
+            modelBuilder.Entity<Rating>().HasKey(r => new { r.MemberId, r.BookId });
 
             // Dummy data
             modelBuilder.Entity<Book>().HasData(
@@ -41,6 +44,11 @@ namespace BookClubApp.DataAccess.Data
             modelBuilder.Entity<Membership>().HasData(
                 new { MemberId = 1, RoleId = 1, BookClubId = 1 },
                 new { MemberId = 2, RoleId = 2, BookClubId = 1 }
+            );
+            
+            modelBuilder.Entity<Rating>().HasData(
+                new Rating { Id = 1, MemberId = 1, BookId = 1, Score = 5 },
+                new Rating { Id = 2, MemberId = 1, BookId = 2, Score = 4 }
             );
         }
     }
