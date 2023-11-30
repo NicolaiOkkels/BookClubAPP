@@ -4,6 +4,7 @@ using BookClubApp.DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookClubApp.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231129203243_populateDummyData")]
+    partial class populateDummyData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -211,43 +214,6 @@ namespace BookClubApp.DataAccess.Migrations
                         });
                 });
 
-            modelBuilder.Entity("BookClubApp.DataAccess.Entities.Rating", b =>
-                {
-                    b.Property<int>("MemberId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("BookId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Score")
-                        .HasColumnType("int");
-
-                    b.HasKey("MemberId", "BookId");
-
-                    b.HasIndex("BookId");
-
-                    b.ToTable("Ratings");
-
-                    b.HasData(
-                        new
-                        {
-                            MemberId = 1,
-                            BookId = 1,
-                            Id = 1,
-                            Score = 5
-                        },
-                        new
-                        {
-                            MemberId = 1,
-                            BookId = 2,
-                            Id = 2,
-                            Score = 4
-                        });
-                });
-
             modelBuilder.Entity("BookClubApp.DataAccess.Entities.Role", b =>
                 {
                     b.Property<int>("Id")
@@ -314,25 +280,6 @@ namespace BookClubApp.DataAccess.Migrations
                     b.Navigation("Member");
 
                     b.Navigation("Role");
-                });
-
-            modelBuilder.Entity("BookClubApp.DataAccess.Entities.Rating", b =>
-                {
-                    b.HasOne("BookClubApp.DataAccess.Entities.Book", "Book")
-                        .WithMany()
-                        .HasForeignKey("BookId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("BookClubApp.DataAccess.Entities.Member", "Member")
-                        .WithMany()
-                        .HasForeignKey("MemberId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Book");
-
-                    b.Navigation("Member");
                 });
 
             modelBuilder.Entity("BookClubApp.DataAccess.Entities.BookClub", b =>
