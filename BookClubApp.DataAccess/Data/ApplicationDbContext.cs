@@ -14,7 +14,34 @@ namespace BookClubApp.DataAccess.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Membership>().HasKey(m=> new {m.MemberId, m.BookClubId, m.RoleId});
+            modelBuilder.Entity<Membership>().HasKey(m => new { m.MemberId, m.BookClubId, m.RoleId });
+
+            // Dummy data
+            modelBuilder.Entity<Book>().HasData(
+                new { Id = 1, Identifier = "A123", ISBN = "978-3-16-148410-0", Title = "Sample Book 1", Description = "Description of Book 1", Publisher = "Publisher 1", PublicationYear = 2020, Language = "English", Pages = "300" },
+                new { Id = 2, Identifier = "B456", ISBN = "978-1-23-456789-7", Title = "Sample Book 2", Description = "Description of Book 2", Publisher = "Publisher 2", PublicationYear = 2021, Language = "Spanish", Pages = "250" }
+            );
+
+            modelBuilder.Entity<Member>().HasData(
+                new { Id = 1, Name = "John Doe", BirthDate = new DateTime(1980, 1, 1), Email = "john.doe@example.com" },
+                new { Id = 2, Name = "Jane Smith", BirthDate = new DateTime(1990, 5, 20), Email = "jane.smith@example.com" }
+            );
+
+            modelBuilder.Entity<Role>().HasData(
+                new { Id = 1, Name = "Member" },
+                new { Id = 2, Name = "Book Club Owner" },
+                new { Id = 3, Name = "Admin" }
+            );
+
+            modelBuilder.Entity<BookClub>().HasData(
+                new { Id = 1, Name = "Book Club 1", Description = "Description of Book Club 1", Type = "Fiction", Region = "North America" },
+                new { Id = 2, Name = "Book Club 2", Description = "Description of Book Club 2", Type = "Non-Fiction", Region = "Europe" }
+            );
+
+            modelBuilder.Entity<Membership>().HasData(
+                new { MemberId = 1, RoleId = 1, BookClubId = 1 },
+                new { MemberId = 2, RoleId = 2, BookClubId = 1 }
+            );
         }
     }
 }
