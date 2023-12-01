@@ -9,18 +9,19 @@ namespace BookClubApp.Business.Services
     public class BookClubService : IBookClubService
     {
         private readonly IBookClubRepository _bookClubRepository;
-        private readonly IMapper _mapper;
+        //private readonly IMapper _mapper;
     
-        public BookClubService(IBookClubRepository bookClubRepository, IMapper mapper)
+        public BookClubService(IBookClubRepository bookClubRepository/*, IMapper mapper*/)
         {
             _bookClubRepository = bookClubRepository;
-            _mapper = mapper;
+           // _mapper = mapper;
         }
 
         public async Task<BookClub> CreateBookClubAsync(BookClub bookClub)
         {
             var createdBookClub = await _bookClubRepository.CreateBookClubAsync(bookClub);
-            return _mapper.Map<BookClub>(createdBookClub);
+            //return _mapper.Map<BookClub>(createdBookClub);
+            return createdBookClub;
 
         }
 
@@ -32,7 +33,8 @@ namespace BookClubApp.Business.Services
         public async Task<BookClub> GetBookClubByIdAsync(int id)
         {
             var returnedBookClub = await _bookClubRepository.GetBookClubByIdAsync(id);
-            return _mapper.Map<BookClub>(returnedBookClub);
+            //return _mapper.Map<BookClub>(returnedBookClub);
+            return returnedBookClub;
         }
 
         public async Task<IEnumerable<BookClub>> GetBookClubsAsync()
