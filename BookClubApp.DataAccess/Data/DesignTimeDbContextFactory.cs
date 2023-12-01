@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace BookClubApp.DataAccess.Data
 {
+    //used for migrations
     public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<ApplicationDbContext>
     {
         public ApplicationDbContext CreateDbContext(string[] args)
