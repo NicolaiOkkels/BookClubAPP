@@ -12,8 +12,6 @@ const App = () => {
   const [description, setDescription] = useState("");
   const [type, setType] = useState("");
   const [region, setRegion] = useState("");
-  const [books, setBooks] = useState([]);
-  const [membership, setMembership] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
 
