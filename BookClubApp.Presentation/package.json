@@ -20,7 +20,6 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "test": "jest --watchAll --no-cache",  
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
