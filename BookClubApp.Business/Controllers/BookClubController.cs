@@ -31,6 +31,7 @@ namespace BookClubApp.Business.Controllers
         [HttpPost("createclub")]
         public async Task<IActionResult> CreateBookClub(BookClub bookClub)
         {
+            //TODO: Get member from token
             var createdBookClub = await _bookClubService.CreateBookClubAsync(bookClub);
             return CreatedAtAction(nameof(GetBookClubById), new {id = createdBookClub.Id}, createdBookClub);
         }
