@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Modal from 'react-modal';
 
-Modal.setAppElement('#root') // replace '#root' with the id of your app's root element
+//Modal.setAppElement('#root') // replace '#root' with the id of your app's root element
 
 
 const App = () => {
@@ -17,6 +17,7 @@ const App = () => {
 
   useEffect(() => {
     (async () => await ListClubs())();
+    Modal.setAppElement('#root');
   }, []);
 
   async function ListClubs() {
