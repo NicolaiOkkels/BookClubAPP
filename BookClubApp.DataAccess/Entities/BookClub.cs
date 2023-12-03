@@ -9,7 +9,6 @@ namespace BookClubApp.DataAccess.Entities
         public required string Description { get; set; }
         public required string Type { get; set; }
         public required string Region { get; set; }
-        public ICollection<Book> Books { get; set; }
-        public virtual ICollection<Membership> Memberships { get; set; }
+        public Book? Book { get; set; }
     }
 }

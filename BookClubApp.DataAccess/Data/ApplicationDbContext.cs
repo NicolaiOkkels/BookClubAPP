@@ -37,7 +37,7 @@ namespace BookClubApp.DataAccess.Data
             );
 
             modelBuilder.Entity<BookClub>().HasData(
-                new { Id = 1, Name = "Book Club 1", Description = "Description of Book Club 1", Type = "Fiction", Region = "North America" },
+                new { Id = 1, Name = "Book Club 1", Description = "Description of Book Club 1", Type = "Fiction", Region = "North America"},
                 new { Id = 2, Name = "Book Club 2", Description = "Description of Book Club 2", Type = "Non-Fiction", Region = "Europe" }
             );
 
