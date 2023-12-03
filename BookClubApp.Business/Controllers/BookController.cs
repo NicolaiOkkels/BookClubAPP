@@ -1,17 +1,19 @@
 using BookClubApp.Business.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookClubAPI.Controllers;
 
 [ApiController]
 [Route("[controller]")]
+[Authorize]
 public class BooksController : ControllerBase
 {
-    private readonly SearchService _searchService;
+    private readonly ISearchService _searchService;
 
-    public BooksController(SearchService openSearchService)
+    public BooksController(ISearchService searchService)
     {
-        _searchService = openSearchService;
+        _searchService = searchService;
     }
 
     [HttpGet("search")]

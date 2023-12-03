@@ -1,11 +1,13 @@
 using BookClubApp.Business.Services;
 using BookClubApp.DataAccess.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookClubAPI.Controllers;
 
 [ApiController]
 [Route("[controller]")]
+[Authorize]
 
 public class MemberController : ControllerBase
 {

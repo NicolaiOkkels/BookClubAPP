@@ -1,16 +1,18 @@
 using BookClubApp.Business.Services;
 using BookClubApp.DataAccess.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookClubApp.Business.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [Authorize]
     public class BookClubController : ControllerBase
     {
-        private readonly BookClubService _bookClubService;
+        private readonly IBookClubService _bookClubService;
 
-        public BookClubController( BookClubService bookClubService)
+        public BookClubController(IBookClubService bookClubService)
         {
             _bookClubService = bookClubService;
         }
