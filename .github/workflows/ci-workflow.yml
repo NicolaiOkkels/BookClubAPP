@@ -43,7 +43,7 @@ jobs:
         run: sleep 30s
 
       - name: Install EF Core Tools
-        run: dotnet tool install --global dotnet-ef
+        run: dotnet tool install --global dotnet-ef --version 7.0.14
 
       - name: Run migrations
         run: dotnet ef database update --project BookClubApp.DataAccess/BookClubApp.DataAccess.csproj
