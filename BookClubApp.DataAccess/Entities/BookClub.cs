@@ -9,6 +9,7 @@ namespace BookClubApp.DataAccess.Entities
         public required string Description { get; set; }
         public required string Type { get; set; }
         public required string Region { get; set; }
+        public required string Genre { get; set; }
         public Book? Book { get; set; }
     }
 }
