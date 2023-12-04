@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Modal from 'react-modal';
+import {Region} from '../Enums/Region';
+import {ClubType} from '../Enums/ClubType';
+import {Genre} from '../Enums/Genre';
 
 //Modal.setAppElement('#root') // replace '#root' with the id of your app's root element
 
@@ -12,6 +15,7 @@ const App = () => {
   const [description, setDescription] = useState("");
   const [type, setType] = useState("");
   const [region, setRegion] = useState("");
+  const [genre, setGenre] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
 
 
@@ -28,19 +32,23 @@ const App = () => {
   async function CreateClub(event) {
     event.preventDefault();
     try {
-      await axios.post("http://localhost:5179/BookClub/createclub", {
+      const response = await axios.post("http://localhost:5179/BookClub/createclub", {
         name: name,
         description: description,
         type: type,
         region: region,
-        
+        genre: genre,
       });
+      //console the JSON response
+      console.log(response.data);
+
       alert("Club Created successfully");
       setId(0);
       setName("");
       setDescription("");
       setType("");
       setRegion("");
+      setGenre("");
       ListClubs();
       setIsModalOpen(false);
     } catch (error) {
@@ -98,27 +106,57 @@ const App = () => {
           </div>
           <div className="form-group">
             <label>BookClub Type</label>
-            <input
-              type="text"
+            <select
               className="form-control"
               id="type"
               value={type}
               onChange={(event) => {
                 setType(event.target.value);
               }}
-            />
+            >
+              <option value="" disabled>Select Club type</option>
+              {Object.entries(ClubType).map(([key, value]) => (
+                <option key={key} value={value}>
+                  {value}
+                </option>
+              ))}
+            </select>
           </div>
           <div className="form-group">
             <label>BookClub Region</label>
-            <input
-              type="text"
+            <select
               className="form-control"
               id="region"
               value={region}
               onChange={(event) => {
                 setRegion(event.target.value);
               }}
-            />
+            >
+              <option value="" disabled>Select Region</option>
+              {Object.entries(Region).map(([key, value]) => (
+                <option key={key} value={value}>
+                  {value}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="form-group">
+            <label>Genre</label>
+            <select
+              className="form-control"
+              id="genre"
+              value={genre}
+              onChange={(event) => {
+                setGenre(event.target.value);
+              }}
+            >
+              <option value="" disabled>Select Genre</option>
+              {Object.entries(Genre).map(([key, value]) => (
+                <option key={key} value={value}>
+                  {value}
+                </option>
+              ))}
+            </select>
           </div>
 
           <div>
@@ -128,33 +166,22 @@ const App = () => {
           </div>
         </form>
         </Modal>
-      <div className="row">
-        <div className="col-12">
-          <table className="table table-bordered table-striped">
-            <thead>
-              <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Type</th>
-                <th>Region</th>
-              </tr>
-            </thead>
-            {bookclubs?.map(function fn(bookclub) {
-              return (
-                <tbody>
-                  <tr>
-                    <th scope="row">{bookclub.id}</th>
-                    <td>{bookclub.name}</td>
-                    <td>{bookclub.description}</td>
-                    <td>{bookclub.type}</td>
-                    <td>{bookclub.region}</td>
-                  </tr>
-                </tbody>
-              );
-            })}
-          </table>
-        </div>
+        <div className="row">
+        {bookclubs?.map((bookclub, index) => (
+  <div className="col-sm-3 mb-3">
+    <div className="card border">
+      {/* <img src={`https://picsum.photos/200/300?random=${index}`} alt="Card cap" className="card-img-top" /> */}
+      <img src={`https://source.unsplash.com/200x300/?${bookclub.name}`} alt="Card cap" className="card-img-top" />
+      <div className="card-body">
+        <h5 className="card-title">{bookclub.name}</h5>
+        <p className="card-text">{bookclub.description}</p>
+        <p className="card-text"><strong>Type:</strong> {bookclub.type}</p>
+        <p className="card-text"><strong>Region:</strong> {bookclub.region}</p>
+        <p className="card-text"><strong>Genre:</strong> {bookclub.genre}</p>
+      </div>
+    </div>
+  </div>
+))}
       </div>
     </div>
   );

@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using BookClubApp.DataAccess.Entities;
+using Enums;
 
 namespace BookClubApp.DataAccess.Data
 {
@@ -31,14 +32,13 @@ namespace BookClubApp.DataAccess.Data
             );
 
             modelBuilder.Entity<Role>().HasData(
-                new { Id = 1, Name = "Member" },
-                new { Id = 2, Name = "Book Club Owner" },
-                new { Id = 3, Name = "Admin" }
+                new { Id = 1, Name = UserRole.Member.ToString()},
+                new { Id = 2, Name = UserRole.Owner.ToString()}
             );
 
             modelBuilder.Entity<BookClub>().HasData(
-                new { Id = 1, Name = "Book Club 1", Description = "Description of Book Club 1", Type = "Fiction", Region = "North America"},
-                new { Id = 2, Name = "Book Club 2", Description = "Description of Book Club 2", Type = "Non-Fiction", Region = "Europe" }
+                new { Id = 1, Name = "Book Club 1", Description = "Description of Book Club 1", Type = ClubType.Online.ToString(), Region = Region.NorthAmerica.ToString(), Genre = Genres.Fiction.ToString()},
+                new { Id = 2, Name = "Book Club 2", Description = "Description of Book Club 2", Type = ClubType.Local.ToString(), Region = Region.Europe.ToString(), Genre = Genres.NonFiction.ToString() }
             );
 
             modelBuilder.Entity<Membership>().HasData(

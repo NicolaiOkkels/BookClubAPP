@@ -4,6 +4,7 @@ using BookClubApp.DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookClubApp.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231203155710_RoleEnum_added")]
+    partial class RoleEnum_added
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -100,10 +103,6 @@ namespace BookClubApp.DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Genre")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -127,19 +126,17 @@ namespace BookClubApp.DataAccess.Migrations
                         {
                             Id = 1,
                             Description = "Description of Book Club 1",
-                            Genre = "Fiction",
                             Name = "Book Club 1",
-                            Region = "NorthAmerica",
-                            Type = "Online"
+                            Region = "North America",
+                            Type = "Fiction"
                         },
                         new
                         {
                             Id = 2,
                             Description = "Description of Book Club 2",
-                            Genre = "NonFiction",
                             Name = "Book Club 2",
                             Region = "Europe",
-                            Type = "Local"
+                            Type = "Non-Fiction"
                         });
                 });
 
