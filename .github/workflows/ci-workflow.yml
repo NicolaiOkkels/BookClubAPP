@@ -11,6 +11,16 @@ on:
 jobs:
   build-and-test-business:
     runs-on: ubuntu-latest
+    env:
+      DB_SA_PASSWORD: ${{ secrets.DB_SA_PASSWORD }}
+    services:
+      mssql:
+        image: mcr.microsoft.com/mssql/server:2022-latest
+        env:
+          SA_PASSWORD: $DB_SA_PASSWORD
+          ACCEPT_EULA: Y
+        ports:
+          - 1433
     steps:
       - name: Check Out Repository
         uses: actions/checkout@v2
@@ -26,10 +36,22 @@ jobs:
       - name: Build
         run: dotnet build BookClubApp.Business/BookClubApp.Business.csproj --no-restore
 
+      - name: Run MSSQL Server Docker Container
+        run: docker run --rm -d -p 1433:1433 -e SA_PASSWORD=$DB_SA_PASSWORD -e ACCEPT_EULA=Y mcr.microsoft.com/mssql/server:2022-latest
+
+      - name: Setup MSSQL Server
+        run: sleep 30s
+
+      - name: Install EF Core Tools
+        run: dotnet tool install --global dotnet-ef --version 7.0.14
+
+      - name: Run migrations
+        run: dotnet ef database update --project BookClubApp.DataAccess/BookClubApp.DataAccess.csproj
+
       - name: Restore dependencies (Test)
         run: dotnet restore BookClubApp.Business/Tests/BookClubApp.Business.Tests/BookClubApp.Business.Tests.csproj
 
-      - name: Run test
+      - name: Run unit and integration test
         run: dotnet test BookClubApp.Business/Tests/BookClubApp.Business.Tests/BookClubApp.Business.Tests.csproj --no-restore
 
   build-and-test-data-access:
