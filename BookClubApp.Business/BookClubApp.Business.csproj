@@ -6,16 +6,25 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>  
     <UserSecretsId>5d45ee15-2fc9-4e8e-9ffb-a2f3d6bddb34</UserSecretsId>
+    <InternalsVisibleTo>BookClubApp.Business.Tests</InternalsVisibleTo>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.14" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="7.0.14" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.13" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="7.0.3" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.0.0" />
     <PackageReference Include="xunit" Version="2.6.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BookClubApp.DataAccess\BookClubApp.DataAccess.csproj"/>
+    <ProjectReference Include="..\BookClubApp.DataAccess\BookClubApp.DataAccess.csproj" />
   </ItemGroup>
   
+  <ItemGroup>
+      <InternalsVisibleTo Include="/Tests/BookClubApp.Business.Tests/BookClubApp.Business.Tests.csproj" />
+  </ItemGroup>
+
 </Project> 
 
