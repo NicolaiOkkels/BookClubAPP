@@ -36,3 +36,7 @@
     transform: rotate(360deg);
   }
 }
+.updateJoinCheckbox {
+  width: 20px;
+  height: 20px;
+}

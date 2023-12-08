@@ -7,7 +7,7 @@ namespace BookClubApp.Business.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    [Authorize]
+    //[Authorize]
     public class BookClubController : ControllerBase
     {
         private readonly IBookClubService _bookClubService;
@@ -36,6 +36,13 @@ namespace BookClubApp.Business.Controllers
             //TODO: Get member from token
             var createdBookClub = await _bookClubService.CreateBookClubAsync(bookClub);
             return CreatedAtAction(nameof(GetBookClubById), new {id = createdBookClub.Id}, createdBookClub);
+        }
+
+        [HttpPut("updateclub/{id}")]
+        public async Task<IActionResult> UpdateBookClub(int id, BookClub bookClub)
+        {
+            var updatedBookClub = await _bookClubService.UpdateBookClubAsync(id, bookClub);
+            return Ok(updatedBookClub);
         }
 
     }

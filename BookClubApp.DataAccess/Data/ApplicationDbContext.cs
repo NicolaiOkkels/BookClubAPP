@@ -37,8 +37,8 @@ namespace BookClubApp.DataAccess.Data
             );
 
             modelBuilder.Entity<BookClub>().HasData(
-                new { Id = 1, Name = "Book Club 1", Description = "Description of Book Club 1", Type = ClubType.Online.ToString(), Region = Region.NorthAmerica.ToString(), Genre = Genres.Fiction.ToString()},
-                new { Id = 2, Name = "Book Club 2", Description = "Description of Book Club 2", Type = ClubType.Local.ToString(), Region = Region.Europe.ToString(), Genre = Genres.NonFiction.ToString() }
+                new { Id = 1, Name = "Book Club 1", Description = "Description of Book Club 1", Type = ClubType.Online.ToString(), Region = Region.NorthAmerica.ToString(), Genre = Genres.Fiction.ToString(), IsOpen = true},
+                new { Id = 2, Name = "Book Club 2", Description = "Description of Book Club 2", Type = ClubType.Local.ToString(), Region = Region.Europe.ToString(), Genre = Genres.NonFiction.ToString(), IsOpen = false }
             );
 
             modelBuilder.Entity<Membership>().HasData(
