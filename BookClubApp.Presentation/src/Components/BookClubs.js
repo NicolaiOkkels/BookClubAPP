@@ -181,7 +181,6 @@ const App = () => {
                 <p className="card-text"><strong>Type:</strong> {bookclub.type}</p>
                 <p className="card-text"><strong>Region:</strong> {bookclub.region}</p>
                 <p className="card-text"><strong>Genre:</strong> {bookclub.genre}</p>
-                {/* <p className="card-text"><strong>isOpen:</strong> {bookclub.isOpen}</p> */}
                 <button
                   className={`btn ${bookclub.isOpen ? 'btn-success' : 'btn-danger'}`}
                   disabled={!bookclub.isOpen}
