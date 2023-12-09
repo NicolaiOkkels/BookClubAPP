@@ -38,5 +38,12 @@ namespace BookClubApp.Business.Controllers
             return CreatedAtAction(nameof(GetBookClubById), new {id = createdBookClub.Id}, createdBookClub);
         }
 
+        [HttpPut("updateclub/{id}")]
+        public async Task<IActionResult> UpdateBookClub(int id, BookClub bookClub)
+        {
+            var updatedBookClub = await _bookClubService.UpdateBookClubAsync(id, bookClub);
+            return Ok(updatedBookClub);
+        }
+
     }
 }

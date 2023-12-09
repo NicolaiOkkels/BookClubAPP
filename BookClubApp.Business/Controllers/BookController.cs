@@ -6,7 +6,7 @@ namespace BookClubAPI.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-[Authorize]
+//[Authorize]
 public class BooksController : ControllerBase
 {
     private readonly ISearchService _searchService;

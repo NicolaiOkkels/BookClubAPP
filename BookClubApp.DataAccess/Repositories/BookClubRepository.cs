@@ -36,9 +36,30 @@ namespace BookClubApp.DataAccess.Repositories
             return await _context.BookClubs.ToListAsync();
         }
 
-        public Task<BookClub> UpdateBookClubAsync(int id, BookClub bookClub)
+        public async Task<BookClub> UpdateBookClubAsync(int id, BookClub bookClub)
         {
-            throw new NotImplementedException();
+            // Retrieve the existing book club from the database
+            var existingBookClub = await _context.BookClubs.FindAsync(id);
+
+            if (existingBookClub == null)
+            {
+                // Handle the case where the book club doesn't exist
+                throw new ArgumentException("Book club with the provided id doesn't exist.");
+            }
+
+            // Update the properties of the existing book club
+            existingBookClub.Name = bookClub.Name;
+            existingBookClub.Description = bookClub.Description;
+            existingBookClub.Type = bookClub.Type;
+            existingBookClub.Region = bookClub.Region;
+            existingBookClub.Genre = bookClub.Genre;
+            existingBookClub.IsOpen = bookClub.IsOpen;
+
+
+            // Save the changes back to the database
+            await _context.SaveChangesAsync();
+
+            return existingBookClub;
         }
     }
 }

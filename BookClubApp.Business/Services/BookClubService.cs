@@ -42,9 +42,10 @@ namespace BookClubApp.Business.Services
             return await _bookClubRepository.GetBookClubsAsync();
         }
 
-        public Task<BookClub> UpdateBookClubAsync(int id, BookClub bookClub)
+        public async Task<BookClub> UpdateBookClubAsync(int id, BookClub bookClub)
         {
-            throw new NotImplementedException();
+            var updatedBookClub = await _bookClubRepository.UpdateBookClubAsync(id, bookClub);
+            return updatedBookClub;            
         }
     }
 }

@@ -10,6 +10,7 @@
     "bootstrap": "^5.3.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "formik": "^2.4.5",
     "react-modal": "^3.16.1",
     "react-router-dom": "^6.20.0",
     "react-scripts": "5.0.1",
@@ -19,7 +20,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "CI=false react-scripts build",
-    "test": "CI=false react-scripts test",
+    "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
