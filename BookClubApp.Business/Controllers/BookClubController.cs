@@ -7,7 +7,7 @@ namespace BookClubApp.Business.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    //[Authorize]
+    [Authorize]
     public class BookClubController : ControllerBase
     {
         private readonly IBookClubService _bookClubService;
