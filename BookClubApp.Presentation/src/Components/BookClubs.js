@@ -5,12 +5,14 @@ import { Region } from '../Enums/Region';
 import { ClubType } from '../Enums/ClubType';
 import { Genre } from '../Enums/Genre';
 import { Formik, Field, Form } from 'formik';
+import useAuthApi from '../hooks/useAuthApi';
 
 const App = () => {
   const [bookclubs, setBookclubs] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [currentClub, setCurrentClub] = useState({});
+  const api = useAuthApi();
 
   useEffect(() => {
     (async () => await ListClubs())();
@@ -18,16 +20,14 @@ const App = () => {
   }, []);
 
   async function ListClubs() {
-    const result = await axios.get("http://localhost:5179/BookClub/getclubs");
+    const result = await api.get('/BookClub/getclubs');
     setBookclubs(result.data);
-    //console.log(result.data);
   }
 
   async function CreateClub(values) {
     try {
       values.isOpen = true;
-      const response = await axios.post("http://localhost:5179/BookClub/createclub", values);
-      //console.log(response.data);
+      const response = await api.post(`/BookClub/createclub`, values);
 
       alert("Club Created successfully");
       ListClubs();
@@ -38,7 +38,7 @@ const App = () => {
   }
   async function UpdateClub(id, values) {
     try {
-      const response = await axios.put(`http://localhost:5179/BookClub/updateclub/${id}`, values);
+      const response = await api.put(`/BookClub/updateclub/${id}`, values);
 
       alert("Club updated successfully");
       ListClubs();

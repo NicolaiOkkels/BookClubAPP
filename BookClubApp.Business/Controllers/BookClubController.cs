@@ -1,6 +1,7 @@
 using BookClubApp.Business.Services;
 using BookClubApp.DataAccess.Entities;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookClubApp.Business.Controllers
@@ -8,6 +9,7 @@ namespace BookClubApp.Business.Controllers
     [ApiController]
     [Route("[controller]")]
     [Authorize]
+    [EnableCors("AllowSpecificOrigin")]
     public class BookClubController : ControllerBase
     {
         private readonly IBookClubService _bookClubService;

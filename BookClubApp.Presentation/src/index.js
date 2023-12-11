@@ -1,18 +1,33 @@
 import 'bootstrap/dist/css/bootstrap.css';
 import React from 'react';
-import { BrowserRouter,Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { Auth0Provider } from '@auth0/auth0-react';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
+const domain = process.env.REACT_APP_AUTH0_DOMAIN; //TODO: change from env at release and is only for test
+const clientId = process.env.REACT_APP_AUTH0_CLIENT_ID; //TODO: change from env at release and is only for test
+const audience = process.env.REACT_APP_AUTH0_AUDIENCE_IDENTIFIER
+
 root.render(
-  <React.StrictMode>
-  <BrowserRouter>
-    <App />
-  </BrowserRouter>
-  </React.StrictMode>,
-  );
+  <>
+    <BrowserRouter>
+      <Auth0Provider
+        domain={domain}
+        clientId={clientId}
+        authorizationParams={{ 
+          redirect_uri: window.location.origin,
+          audience: audience,
+          scope: "openid profile",
+         }}
+      >
+        <App />
+      </Auth0Provider>
+    </BrowserRouter>
+  </>,
+);
 
 reportWebVitals();
