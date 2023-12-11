@@ -12,5 +12,6 @@ public static class DataAccesDependencyInjection
         services.AddScoped<IBookClubRepository, BookClubRepository>();
         services.AddScoped<IMemberRepository, MemberRepository>();
         services.AddScoped<IRatingRepository, RatingRepository>();
+        services.AddScoped<ILibraryRepository, LibraryRepository>();
     }
 }

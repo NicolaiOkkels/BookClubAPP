@@ -10,6 +10,7 @@ namespace BookClubApp.DataAccess.Data
         public DbSet<Member> Members { get; set; }
         public DbSet<BookClub> BookClubs { get; set; }
         public DbSet<Book> Books { get; set; }
+        public DbSet<Libraries> Libraries { get; set; }
         public DbSet<Membership> Memberships { get; set; }
         public DbSet<Role> Roles { get; set; }
 
@@ -37,9 +38,11 @@ namespace BookClubApp.DataAccess.Data
             );
 
             modelBuilder.Entity<BookClub>().HasData(
-                new { Id = 1, Name = "Book Club 1", Description = "Description of Book Club 1", Type = ClubType.Online.ToString(), Region = Region.NorthAmerica.ToString(), Genre = Genres.Fiction.ToString(), IsOpen = true},
-                new { Id = 2, Name = "Book Club 2", Description = "Description of Book Club 2", Type = ClubType.Local.ToString(), Region = Region.Europe.ToString(), Genre = Genres.NonFiction.ToString(), IsOpen = false }
-            );
+              new { Id = 1, Name = "Book Club 1", Description = "Description of Book Club 1", Type = ClubType.Online.ToString(), LibrariesId = 1, Genre = Genres.Fiction.ToString(), IsOpen = true},
+            new { Id = 2, Name = "Book Club 2", Description = "Description of Book Club 2", Type = ClubType.Local.ToString(), LibrariesId = 2, Genre = Genres.NonFiction.ToString(), IsOpen = false }
+);
+
+
 
             modelBuilder.Entity<Membership>().HasData(
                 new { MemberId = 1, RoleId = 1, BookClubId = 1 },
@@ -50,6 +53,32 @@ namespace BookClubApp.DataAccess.Data
                 new Rating { Id = 1, MemberId = 1, BookId = 1, Score = 5 },
                 new Rating { Id = 2, MemberId = 1, BookId = 2, Score = 4 }
             );
+
+            modelBuilder.Entity<Libraries>().HasData(
+                new
+                {
+                    Id = 1,
+                    LibrarieNumber = 700300,
+                    LibrarieName = "Poster vedr. sproglige minoriteter Det Kgl. Bibliotek",
+                    LibrarieAddress = "Christians Brygge 8",
+                    LibrarieZipCode = 1219,
+                    LibrarieCity = "København K",
+                    PhoneNumber = "33474747",
+                    Email = "kb@kb.dk"
+                },
+                new
+                {
+                    Id = 2,
+                    LibrarieNumber = 700400,
+                    LibrarieName = "Dansk Centralbibliotek for Sydslesvig e.V.",
+                    LibrarieAddress = "Norderstrasse 59, 24939 Flensburg",
+                    LibrarieZipCode = 6330,
+                    LibrarieCity = "Padborg",
+                    PhoneNumber = "+4946186970",
+                    Email = "dcb@dcbib.dk"
+                }
+            );
+
         }
     }
 }
