@@ -1,44 +1,44 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import Modal from 'react-modal';
-import { ClubType } from '../Enums/ClubType';
-import { Genre } from '../Enums/Genre';
-import { Formik, Field, Form } from 'formik';
-import { useFormikContext } from 'formik';
+import Modal from "react-modal";
+import { ClubType } from "../Enums/ClubType";
+import { Genre } from "../Enums/Genre";
+import { Formik, Field, Form } from "formik";
+import useAuthApi from "../hooks/useAuthApi";
 
 const App = () => {
   const [bookclubs, setBookclubs] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [currentClub, setCurrentClub] = useState({});
+  const api = useAuthApi();
   const [libraries, setLibraries] = useState([]);
-  //const { values } = useFormikContext();
 
   useEffect(() => {
     (async () => {
       await ListClubs();
       await ListLibraries();
     })();
-    Modal.setAppElement('#root');
+    Modal.setAppElement("#root");
   }, []);
 
   async function ListClubs() {
-    const result = await axios.get("http://localhost:5179/BookClub/getclubs");
+    const result = await api.get("/BookClub/getclubs");
     setBookclubs(result.data);
-    //console.log(result.data);
   }
+
   async function ListLibraries() {
-    const result = await axios.get("http://localhost:5179/Library/getlibraries");
+    const result = await api.get("/Library/getlibraries");
     setLibraries(result.data);
     console.log("list of libraries ", result.data);
   }
+
   async function CreateClub(values) {
     try {
       values.isOpen = true;
+      const response = await api.post(`/BookClub/createclub`, values);
       values.librariesId = Number(values.librariesId); // Convert librariesId to a number
       console.log("the values being sent to server: ", values);
-      const response = await axios.post("http://localhost:5179/BookClub/createclub", values);
-      console.log("a new club has been created with values: ", response.data);
 
       alert("Club Created successfully");
       ListClubs();
@@ -47,12 +47,12 @@ const App = () => {
       alert("Error creating club");
     }
   }
+  
   async function UpdateClub(id, values) {
     try {
+      const response = await api.put(`/BookClub/updateclub/${id}`, values);
       values.librariesId = Number(values.librariesId);
       console.log("the values being sent to server: ", values);
-      const response = await axios.put(`http://localhost:5179/BookClub/updateclub/${id}`, values);
-      console.log("a new club has been created with values: ", response.data);
 
       alert("Club updated successfully");
       ListClubs();
@@ -114,7 +114,12 @@ const App = () => {
               </div>
               <div className="form-group">
                 <label>BookClub Type</label>
-                <Field as="select" className="form-control" id="type" name="type">
+                <Field
+                  as="select"
+                  className="form-control"
+                  id="type"
+                  name="type"
+                >
                   <option value="" disabled>
                     Select Club type
                   </option>
@@ -125,7 +130,7 @@ const App = () => {
                   ))}
                 </Field>
               </div>
-              {values.type !== 'Online' && (
+              {values.type !== "Online" && (
                 <div className="form-group">
                   <label>Library</label>
                   <Field
@@ -292,14 +297,18 @@ const App = () => {
                     <strong>Type:</strong> {bookclub.type}
                   </p>
                   <p className="card-text">
-                    <strong>Library:</strong> {libraries.find(library => library.id === bookclub.librariesId)?.librarieName || 'N/A'}
+                    <strong>Library:</strong>{" "}
+                    {libraries.find(
+                      (library) => library.id === bookclub.librariesId
+                    )?.librarieName || "N/A"}
                   </p>
                   <p className="card-text">
                     <strong>Genre:</strong> {bookclub.genre}
                   </p>
                   <button
-                    className={`btn ${bookclub.isOpen ? "btn-success" : "btn-danger"
-                      }`}
+                    className={`btn ${
+                      bookclub.isOpen ? "btn-success" : "btn-danger"
+                    }`}
                     disabled={!bookclub.isOpen}
                   >
                     {bookclub.isOpen ? "Join" : "Full"}

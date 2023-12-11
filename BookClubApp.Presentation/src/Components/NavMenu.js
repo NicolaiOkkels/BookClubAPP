@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Collapse, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink } from 'reactstrap';
 import { Link } from 'react-router-dom';
+import Logout from './Logout';
+import Profile from './Profile';
 import './NavMenu.css';
 
 const NavMenu = () => {
@@ -31,6 +33,12 @@ const NavMenu = () => {
             </NavItem>
             <NavItem>
               <NavLink tag={Link} className="text-dark" to="/bookclubs">BookClubs</NavLink>
+            </NavItem>
+            <NavItem>
+              <Profile />
+            </NavItem>
+            <NavItem>
+              <Logout />
             </NavItem>
           </ul>
         </Collapse>
