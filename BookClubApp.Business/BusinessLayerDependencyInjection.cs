@@ -19,7 +19,7 @@ public static class BusinessLayerDependencyInjection
         services.AddScoped<ISearchService, SearchService>();
     }
 
-    public static void RegisterJWT(this IServiceCollection services)
+    public static void RegisterJWT(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddAuthentication(options =>
         {
@@ -28,8 +28,8 @@ public static class BusinessLayerDependencyInjection
         })
         .AddJwtBearer(options =>
         {
-            options.Authority = "https://dev-n1ejdna5rha1taxg.us.auth0.com/";
-            options.Audience = "https://api.bookclub.com";
+            options.Authority = $"https://{configuration["Auth0:Domain"]}";
+            options.Audience = configuration["Auth0:Audience"];
         });
     }
 }
