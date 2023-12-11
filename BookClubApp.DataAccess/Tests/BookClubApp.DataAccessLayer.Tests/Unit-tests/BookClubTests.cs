@@ -12,7 +12,7 @@ public class BookClubTests
             Name = "Test Club",
             Description = "Test Description",
             Type = "Test Type",
-            Region = "Test Region",
+            LibrariesId = 1,
             Genre = "Test Genre"
         };
  
@@ -33,7 +33,7 @@ public class BookClubTests
             Name = "Test Club",
             Description = "Test Description",
             Type = "Test Type",
-            Region = "Test Region",
+            LibrariesId = 1,
             Genre = "Test Genre"
         };
  

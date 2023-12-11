@@ -51,7 +51,7 @@ namespace BookClubApp.DataAccess.Repositories
             existingBookClub.Name = bookClub.Name;
             existingBookClub.Description = bookClub.Description;
             existingBookClub.Type = bookClub.Type;
-            existingBookClub.Region = bookClub.Region;
+            existingBookClub.LibrariesId = bookClub.LibrariesId;
             existingBookClub.Genre = bookClub.Genre;
             existingBookClub.IsOpen = bookClub.IsOpen;
 

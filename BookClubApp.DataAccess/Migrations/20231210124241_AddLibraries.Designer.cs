@@ -4,6 +4,7 @@ using BookClubApp.DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookClubApp.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231210124241_AddLibraries")]
+    partial class AddLibraries
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -107,10 +110,11 @@ namespace BookClubApp.DataAccess.Migrations
                     b.Property<bool>("IsOpen")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("LibrariesId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Region")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -122,8 +126,6 @@ namespace BookClubApp.DataAccess.Migrations
 
                     b.HasIndex("BookId");
 
-                    b.HasIndex("LibrariesId");
-
                     b.ToTable("BookClubs");
 
                     b.HasData(
@@ -133,8 +135,8 @@ namespace BookClubApp.DataAccess.Migrations
                             Description = "Description of Book Club 1",
                             Genre = "Fiction",
                             IsOpen = true,
-                            LibrariesId = 1,
                             Name = "Book Club 1",
+                            Region = "NorthAmerica",
                             Type = "Online"
                         },
                         new
@@ -143,8 +145,8 @@ namespace BookClubApp.DataAccess.Migrations
                             Description = "Description of Book Club 2",
                             Genre = "NonFiction",
                             IsOpen = false,
-                            LibrariesId = 2,
                             Name = "Book Club 2",
+                            Region = "Europe",
                             Type = "Local"
                         });
                 });
@@ -353,13 +355,7 @@ namespace BookClubApp.DataAccess.Migrations
                         .WithMany()
                         .HasForeignKey("BookId");
 
-                    b.HasOne("BookClubApp.DataAccess.Entities.Libraries", "Libraries")
-                        .WithMany()
-                        .HasForeignKey("LibrariesId");
-
                     b.Navigation("Book");
-
-                    b.Navigation("Libraries");
                 });
 
             modelBuilder.Entity("BookClubApp.DataAccess.Entities.Membership", b =>
