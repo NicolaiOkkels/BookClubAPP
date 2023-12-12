@@ -4,6 +4,8 @@ using BookClubApp.Business.Services;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit.Abstractions;
+using RestSharp;
+using Newtonsoft.Json; // Add the missing using directive
 
 namespace Integration_test
 {
@@ -25,16 +27,31 @@ namespace Integration_test
         public async Task AuthorizedEndpoint_ReturnsSuccess(string url)
         {
             // Arrange
-            var client = _factory.CreateClient();
+            var client = new RestClient("https://dev-n1ejdna5rha1taxg.us.auth0.com/oauth/token");
+            var request = new RestRequest
+            {
+                Method = Method.Post
+            };
+            request.AddHeader("content-type", "application/json");
+            request.AddParameter("application/json", "{\"client_id\":\"ydfG4TLPDrb16STlDMksyaijoqaQ0P0G\",\"client_secret\":\"U_l2RTAdW67Junfn_-dW4tXMMx00Dbx0XN_t39k2N03V4J9FkupBXvVx3bptF2pv\",\"audience\":\"https://api.bookclub.com\",\"grant_type\":\"client_credentials\"}", ParameterType.RequestBody);
+            RestResponse tokenResponse = client.Execute(request);
+
+            // Extract the token from the response
+            var jsonResponse = JsonConvert.DeserializeObject<Dictionary<string, string>>(tokenResponse.Content);
+            var token = jsonResponse.ContainsKey("access_token") ? jsonResponse["access_token"] : null;
+
+            // Ensure that the token is not null or empty
+            Assert.False(string.IsNullOrEmpty(token), "JWT token is null or empty");
+
+            // Use the token in your test client
+            var testClient = _factory.CreateClient();
             using var scope = _factory.Services.CreateScope();
-            // Generate a JWT token
-            var token = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InBOcmdWT1pRby1FbDVUNF9rdjIyZSJ9.eyJpc3MiOiJodHRwczovL2Rldi1uMWVqZG5hNXJoYTF0YXhnLnVzLmF1dGgwLmNvbS8iLCJzdWIiOiJ5ZGZHNFRMUERyYjE2U1RsRE1rc3lhaWpvcWFRMFAwR0BjbGllbnRzIiwiYXVkIjoiaHR0cHM6Ly9hcGkuYm9va2NsdWIuY29tIiwiaWF0IjoxNzAyMzA5MzY5LCJleHAiOjE3MDIzOTU3NjksImF6cCI6InlkZkc0VExQRHJiMTZTVGxETWtzeWFpam9xYVEwUDBHIiwiZ3R5IjoiY2xpZW50LWNyZWRlbnRpYWxzIn0.N9sRLK5PRfGhdrudQ23tjRRAj-Nupq3U3NAHvTmRmAVUwyqf5H7n0UZNumN5TmaeUoQExr3USgUD09xvs7408V5_D58_Qfd0T7fjn0Ejcg0_mnDiun8UwawefGNCT-4SsbRYkMEs8lKo2az_v2ob4EzwLvHexeV1wKc8PVrSRcc0ILqu0IXmdP_VQlkvPi6-OMKdLY1WoM2btqEKHRbCcBfBfGowI-MN9kynDloG4QkjLZNPoEpqHI1IcYyfqun4WN4ViC0Vtsf3KBPnWcCrdkRoCDqKF1MC77q0Zba1fpjpbnKE0Zz0EwmiuS1tcxPDj-ILFOCFgNegL4RVJK-1dQ";
 
             //Set the JWT token in the Authorization header
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            testClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
             // Act
-            var response = await client.GetAsync(url);
+            var response = await testClient.GetAsync(url);
 
             // Assert
             response.EnsureSuccessStatusCode();
