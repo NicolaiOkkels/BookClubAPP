@@ -1,21 +1,20 @@
-import  Counter  from "./Components/Counter";
-import  Home  from "./Components/Home";
-import  BookClubs  from "./Components/BookClubs";
+import BookSearch from "./Components/BookSearch";
+import Home from "./Components/Home";
+import BookClubs from "./Components/BookClubs";
 
 const AppRoutes = [
   {
     index: true,
-    element: <Home />
+    element: <Home />,
   },
   {
-    path: '/counter',
-    element: <Counter />
-  }
-  ,
+    path: "/booksearch",
+    element: <BookSearch />,
+  },
   {
-    path: '/bookclubs',
-    element: <BookClubs />
-  }
+    path: "/bookclubs",
+    element: <BookClubs />,
+  },
 ];
 
 export default AppRoutes;
