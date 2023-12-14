@@ -4,7 +4,10 @@ namespace BookClubApp.Business.Services
 {
     public interface ISearchService
     {
-       Task<IEnumerable<Book>> SearchBookAsync(string query);
-       Task<Book> GetBookByIdentifier(string identifier);
+        Task<Book> GetBookByIdentifierAsync(int id);
+        Task<IEnumerable<Book>> GetBooksAsync();
+        Task<Book> AddBookAsync(Book book);
+        Task DeleteBookAsync(Book book);
+
     }
 }

@@ -8,19 +8,31 @@ namespace BookClubApp.DataAccess.Repositories
     {
         private readonly ApplicationDbContext _context;
 
-        public BookRepository(ApplicationDbContext context){
+        public BookRepository(ApplicationDbContext context)
+        {
             _context = context;
         }
 
-        public async Task AddBookAsync(Book book)
+        public async Task<Book> AddBookAsync(Book book)
         {
             _context.Books.Add(book);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();   
+            return book;
         }
 
-        public async Task<Book> GetBookByIdentifierAsync(string identifier)
+        public Task DeleteBookAsync(Book book)
         {
-            return await _context.Books.FirstOrDefaultAsync(book => book.Identifier == identifier);
+            throw new NotImplementedException();
+        }
+
+        public Task<Book> GetBookByIdentifierAsync(string identifier)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<IEnumerable<Book>> GetBooksAsync()
+        {
+            return await _context.Books.ToListAsync();
         }
     }
 
