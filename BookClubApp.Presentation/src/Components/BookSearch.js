@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import ApolloClient, { gql } from "apollo-boost";
+import useAuthApi from "../hooks/useAuthApi";
+
 
 
 // Define your Card component
@@ -71,15 +73,16 @@ const BookSearch = () => {
   const [searchString, setSearchString] = useState("");
   const [searchResults, setSearchResults] = useState(null);
   // Add a new state variable to hold the saved books
-const [savedBooks, setSavedBooks] = useState([]);
+  const [savedBooks, setSavedBooks] = useState([]);
+  const api = useAuthApi();
 
   const handleSearch = () => {
     const formattedSearchString = `"${searchString}"`; // Wrap the searchString in quotes
-  
+
     const variables = {
       cql: formattedSearchString,
       offset: 0,
-      limit: 10,
+      limit: 15,
       filters: {},
     };
 
@@ -93,26 +96,36 @@ const [savedBooks, setSavedBooks] = useState([]);
   };
 
 
-  // Add a new function to handle saving a book
-const handleSaveBook = (book) => {
-  // Send a request to your server to save the book in your database
-  // This will depend on how your server is set up
-  fetch('/api/saveBook', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(book),
-  })
-  .then(response => response.json())
-  .then(data => {
-    // Update the savedBooks state with the new book
-    setSavedBooks([...savedBooks, data]);
-  })
-  .catch((error) => {
-    console.error('Error:', error);
-  });
-};
+  const handleSaveBook = async (book) => {
+    try {
+      const data = {
+        Pid: book.manifestations.bestRepresentation.pid,
+        Title: book.titles.full[0],
+        Author: book.creators.map(creator => creator.display).join(', '),
+        CoverImage: book.manifestations.bestRepresentation.cover.detail,
+        MaterialType: book.manifestations.bestRepresentation.materialTypes.map(materialType => materialType.materialTypeGeneral.display).join(', ')
+      };
+  
+      console.log('Data being sent to server:', data); // Log the data
+  
+      const response = await api.post('/Books/addbook', data, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+  
+      const responseData = response.data;
+  
+      // Update the savedBooks state with the new book
+      setSavedBooks([...savedBooks, responseData]);
+  
+    } catch (error) {
+      console.error('Error:', error);
+      if (error.response) {
+        console.log('Server response:', error.response.data); // Log the server response
+      }
+    }
+  };
 
   const handleFormSubmit = (e) => {
     e.preventDefault(); // Prevent the form from refreshing the page
@@ -131,21 +144,22 @@ const handleSaveBook = (book) => {
       </form>
       {searchResults && searchResults.complexSearch && searchResults.complexSearch.works && (
         <div>
-        <h2>Search Results:</h2>
-        <div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'space-evenly'}}>
-          
-        {searchResults.complexSearch.works.map((work, index) => (
-  <div key={index}>
-    <Card 
-      title={work.titles.full[0]} 
-      creator={work.creators.map(creator => creator.display).join(', ')} 
-      cover={work.manifestations.bestRepresentation.cover.detail}
-      materialTypes={work.manifestations.bestRepresentation.materialTypes.map(materialType => materialType.materialTypeGeneral.display).join(', ')}
-    />
-    <button onClick={() => handleSaveBook(work)}>Save</button>
-  </div>
-          ))}
-        </div>
+          <h2>Search Results:</h2>
+          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-evenly' }}>
+
+            {searchResults.complexSearch.works.map((work, index) => (
+              <div key={index}>
+                <Card
+                  title={work.titles.full[0]}
+                  creator={work.creators.map(creator => creator.display).join(', ')}
+                  cover={work.manifestations.bestRepresentation.cover.detail}
+                  materialTypes={work.manifestations.bestRepresentation.materialTypes.map(materialType => materialType.materialTypeGeneral.display).join(', ')}
+                  Pid={work.manifestations.bestRepresentation.pid}
+                />
+                <button onClick={() => handleSaveBook(work)}>Save</button> 
+              </div>
+            ))}
+          </div>
         </div>
       )}
     </div>

@@ -29,6 +29,9 @@ const NavMenu = () => {
               <NavLink tag={Link} className="text-dark" to="/booksearch">BookSearch</NavLink>
             </NavItem>
             <NavItem>
+              <NavLink tag={Link} className="text-dark" to="/favbooks">Books</NavLink>
+            </NavItem>
+            <NavItem>
               <NavLink tag={Link} className="text-dark" to="/fetch-data">Fetch data</NavLink>
             </NavItem>
             <NavItem>

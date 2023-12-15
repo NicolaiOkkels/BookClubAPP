@@ -1,96 +1,37 @@
 using System.Xml.Linq;
 using BookClubApp.DataAccess.Entities;
+using BookClubApp.DataAccess.Repositories;
 
 namespace BookClubApp.Business.Services
 {
     public class SearchService : ISearchService
     {
+        private readonly IBookRepository _bookRepository;
 
-        private readonly HttpClient _httpClient;
-        private string baseURL = "https://opensearch.addi.dk/test_5.2/";
-
-        public async Task<Book> GetBookByIdentifier(string identifier)
+        public SearchService(IBookRepository bookRepository)
         {
-            var getObjectQuery = $"?action=getObject&identifier={identifier}&agency=100200&profile=test";
-            var response = await _httpClient.GetAsync(baseURL + getObjectQuery);
-
-            if (!response.IsSuccessStatusCode)
-            {
-                throw new Exception();
-            }
-
-            var content = await response.Content.ReadAsStringAsync();
-            var xDoc = XDocument.Parse(content);
-            var ns = xDoc.Root.GetDefaultNamespace();
-            var xsi = "http://www.w3.org/2001/XMLSchema-instance";
-
-            var record = xDoc.Descendants(ns + "record").FirstOrDefault();
-            if (record == null)
-            {
-                return null;
-            }
-
-            var book = new Book
-            {
-                Identifier = record.Element(ns + "identifier")?.Value,
-                ISBN = record.Elements(ns + "identifier")
-                            .FirstOrDefault(id => (string)id.Attribute(XNamespace.Get(xsi) + "type") == "dkdcplus:ISBN")?.Value,
-                Title = record.Elements(ns + "title")
-                            .FirstOrDefault(t => t.Attribute(XNamespace.Get(xsi) + "type") == null)?.Value,
-                Description = record.Element(ns + "description")?.Value,
-                Publisher = record.Element(ns + "publisher")?.Value,
-                PublicationYear = ParsePublicationYear(record, ns),
-                Language = record.Elements(ns + "language")
-                                .FirstOrDefault(lang => lang.Attribute(XNamespace.Get(xsi) + "type") == null)?.Value,
-                Pages = record.Element(ns + "extent")?.Value
-            };
-
-            return book;
+            _bookRepository = bookRepository;
         }
 
-        public async Task<IEnumerable<Book>> SearchBookAsync(string query)
+        public Task DeleteBookAsync(Book book)
         {
-            var searchQuery = String.Format($"?action=search&query=\"{query}\"&agency=100200&profile=test&start=1&stepValue=5");
-            var response = await _httpClient.GetAsync(baseURL + searchQuery);
-
-            if (!response.IsSuccessStatusCode)
-            {
-                throw new Exception();
-            }
-
-            var content = await response.Content.ReadAsStringAsync();
-            var xDoc = XDocument.Parse(content);
-            var ns = xDoc.Root?.GetDefaultNamespace();
-            var xsi = "http://www.w3.org/2001/XMLSchema-instance";
-
-            var books = xDoc.Descendants(ns + "record")
-                            .Select(record => new Book
-                            {
-                                Identifier = record.Element(ns + "identifier")?.Value,
-                                ISBN = record.Elements(ns + "identifier")
-                                            .FirstOrDefault(id => (string?)id.Attribute(XNamespace.Get(xsi) + "type") == "dkdcplus:ISBN")?.Value,
-                                Title = record.Elements(ns + "title")
-                                            .FirstOrDefault(t => t.Attribute(XNamespace.Get(xsi) + "type") == null)?.Value,
-                                Description = record.Element(ns + "description")?.Value,
-                                Publisher = record.Element(ns + "publisher")?.Value,
-                                PublicationYear = ParsePublicationYear(record, ns),
-                                Language = record.Elements(ns + "language")
-                                                .FirstOrDefault(lang => lang.Attribute(XNamespace.Get(xsi) + "type") == null)?.Value,
-                                Pages = record.Element(ns + "extent")?.Value
-                            })
-                            .ToList();
-
-            return books;
+            throw new NotImplementedException();
         }
 
-        private int ParsePublicationYear(XElement record, XNamespace ns)
+        public Task<Book> GetBookByIdentifierAsync(int id)
         {
-            var yearString = record.Element(ns + "date")?.Value;
-            if (int.TryParse(yearString, out int year))
-            {
-                return year;
-            }
-            return 0;
+            throw new NotImplementedException();
+        }
+
+        public async Task<IEnumerable<Book>> GetBooksAsync()
+        {
+            return await _bookRepository.GetBooksAsync();
+        }
+
+        public async Task<Book> AddBookAsync(Book book)
+        {
+            var addedBook = await _bookRepository.AddBookAsync(book);
+            return addedBook;
         }
     }
 }
