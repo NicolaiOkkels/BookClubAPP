@@ -34,6 +34,13 @@ namespace BookClubApp.DataAccess.Repositories
         {
             return await _context.Books.ToListAsync();
         }
+
+        public async Task<Book> UpdateBookAsync(int id, Book book)
+        {
+            _context.Books.Update(book);
+            await _context.SaveChangesAsync();
+            return book;
+        }
     }
 
 }
