@@ -9,5 +9,6 @@ namespace BookClubApp.DataAccess.Repositories
         Task<Book> AddBookAsync(Book book);
         Task DeleteBookAsync(Book book);
         Task<IEnumerable<Book>> GetBooksAsync();
+        Task<Book> UpdateBookAsync(int id, Book book);
     }
 }

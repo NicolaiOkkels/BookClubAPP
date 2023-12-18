@@ -23,7 +23,9 @@ namespace BookClubApp.DataAccess.Data
 
             // Dummy data
             modelBuilder.Entity<Book>().HasData(
-                new { Id = 1, Title = "Harry Potter og De Vises Sten", Author = "Joanne K. Rowling",  CoverImage = "https://moreinfo.addi.dk/2.11/more_info_get.php?lokalid=137198843&attachment_type=forside_stor&bibliotek=870970&source_id=870970&key=fb7fb908d05c9c08b16d", Pid = "870970-basis:137198843", MaterialType = "bøger" } 
+                new { Id = 1, Title = "Harry Potter og De Vises Sten", Author = "Joanne K. Rowling",  
+                CoverImage = "https://moreinfo.addi.dk/2.11/more_info_get.php?lokalid=137198843&attachment_type=forside_stor&bibliotek=870970&source_id=870970&key=fb7fb908d05c9c08b16d", 
+                Pid = "870970-basis:137198843", MaterialType = "bøger", Score = 5 }  
             );
 
             modelBuilder.Entity<Member>().HasData(

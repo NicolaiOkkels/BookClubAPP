@@ -15,7 +15,7 @@ public class MemberController : ControllerBase
     private readonly IMemberService _memberService;
 
     public MemberController(IMemberService memberService)
-   
+
     {
         _memberService = memberService;
     }
@@ -31,7 +31,31 @@ public class MemberController : ControllerBase
         {
             throw new Exception(ex.Message);
         }
-       
+
+    }
+    [HttpGet("getmemberbyemail")]
+    public async Task<IActionResult> GetMemberByEmail(string email)
+    {
+        try
+        {
+            return Ok(await _memberService.GetMemberByEmailAsync(email));
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message);
+        }
+    }
+    [HttpPost("addmember")]
+    public async Task<IActionResult> AddMember(Member member)
+    {
+        try
+        {
+            return Ok(await _memberService.AddMemberAsync(member));
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message);
+        }
     }
 
 }
