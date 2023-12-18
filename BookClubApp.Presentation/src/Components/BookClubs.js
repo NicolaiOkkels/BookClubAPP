@@ -13,6 +13,28 @@ const App = () => {
   const [currentClub, setCurrentClub] = useState({});
   const api = useAuthApi();
   const [libraries, setLibraries] = useState([]);
+  const [sortGenre, setSortGenre] = useState('');
+  const [sortType, setSortType] = useState('');
+  const [filterName, setFilterName] = useState('');
+
+  const ClubType = {
+    Online: 1,
+    Local: 2,
+  };
+  
+  const Genres = {
+    Fiction: 1,
+    Fantasy: 2,
+    ScienceFiction: 3,
+    Mystery: 4,
+    Thriller: 5,
+    Romance: 6,
+    Western: 7,
+    Dystopian: 8,
+    Horror: 9,
+    HistoricalFiction: 10,
+    NonFiction: 11,
+  };
 
   useEffect(() => {
     (async () => {
@@ -23,7 +45,14 @@ const App = () => {
   }, []);
 
   async function ListClubs() {
-    const result = await api.get("/BookClub/getclubs");
+    //const result = await api.get("/BookClub/getclubs");
+    //setBookclubs(result.data);
+    const queryString = new URLSearchParams({
+      genre: sortGenre,
+      type: sortType
+    }).toString();
+  
+    const result = await api.get(`/BookClub/bookclubs/sorted?${queryString}`);
     setBookclubs(result.data);
   }
 
@@ -78,6 +107,31 @@ const App = () => {
         >
           Create New Club
         </button>
+      </div>
+      <div style={{ marginBottom: '20px' }}>
+      <select value={sortGenre} onChange={(e) => setSortGenre(e.target.value)}>
+      <option value="">Select Genre</option>
+      {Object.entries(Genres).map(([key]) => (
+        <option key={key} value={key}>{key}</option>
+      ))}
+      </select>
+
+      <select value={sortType} onChange={(e) => setSortType(e.target.value)}>
+        <option value="">Select Type</option>
+        {Object.entries(ClubType).map(([key]) => (
+          <option key={key} value={key}>{key}</option>
+        ))}
+      </select>
+
+        <button onClick={ListClubs}>Search</button>
+      </div>
+
+      <div className="row">
+        {bookclubs?.map((bookclub, index) => (
+          <div className="col-sm-3 mb-3" key={index}>
+            {/* Your code for displaying each bookclub */}
+          </div>
+        ))}
       </div>
       <Modal isOpen={isModalOpen}>
         <button onClick={() => setIsModalOpen(false)}>Close</button>
