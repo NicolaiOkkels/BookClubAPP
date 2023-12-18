@@ -16,5 +16,21 @@ namespace BookClubApp.Business.Services
         {
             return await _memberRepository.GetMembersAsync();
         }
+
+        public async Task<Member> GetMemberByEmailAsync(string email)
+    {
+        return await _memberRepository.GetMemberByEmailAsync(email);
+    }
+
+    public async Task<Member> AddMemberAsync(Member member)
+    {
+        var existingMember = await GetMemberByEmailAsync(member.Email);
+        if (existingMember == null)
+        {
+            return await _memberRepository.AddMemberAsync(member);
+        }
+
+        return existingMember; 
+    }
     }
 }

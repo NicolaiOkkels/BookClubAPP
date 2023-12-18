@@ -31,4 +31,10 @@ public class BooksController : ControllerBase
         var addedBook = await _searchService.AddBookAsync(book);
         return Ok(addedBook);
     }
+    [HttpPut("updatebook/{id}")]
+    public async Task<IActionResult> UpdateBook(int id, Book book)
+    {
+        var updatedBook = await _searchService.UpdateBookAsync(id, book);
+        return Ok(updatedBook);
+    }
 }

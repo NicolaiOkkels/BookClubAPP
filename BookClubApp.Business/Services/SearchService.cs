@@ -33,5 +33,11 @@ namespace BookClubApp.Business.Services
             var addedBook = await _bookRepository.AddBookAsync(book);
             return addedBook;
         }
+
+        public async Task<Book> UpdateBookAsync(int id, Book book)
+        {
+            var updatedBook = await _bookRepository.UpdateBookAsync(id, book);
+            return updatedBook;
+        }
     }
 }

@@ -13,10 +13,24 @@ namespace BookClubApp.DataAccess.Repositories
             _context = context;
         }
 
+        public async Task<Member> AddMemberAsync(Member member)
+        {
+            _context.Members.Add(member);
+            await _context.SaveChangesAsync();
+            return member;
+        }
+
+        public Task<Member> GetMemberByEmailAsync(string email)
+        {
+            return _context.Members.FirstOrDefaultAsync(m => m.Email == email);
+        }
+
         public async Task<IEnumerable<Member>> GetMembersAsync()
         {
             return await _context.Members.ToListAsync();
         }
+
+        
     }
 
 }
