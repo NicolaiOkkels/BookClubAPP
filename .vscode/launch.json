@@ -10,7 +10,7 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/BookClubApp.Business/Tests/BookClubApp.Business.Tests/bin/Debug/net7.0/BookClubApp.Business.Tests.dll",
+            "program": "${workspaceFolder}/BookClubApp.Business/Tests/BookClubApp.Business.Tests/bin/Debug/net7.0/BookClubApp.Business.dll",
             "args": [],
             "cwd": "${workspaceFolder}/BookClubApp.Business/Tests/BookClubApp.Business.Tests",
             // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console

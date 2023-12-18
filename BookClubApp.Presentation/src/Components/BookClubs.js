@@ -5,6 +5,7 @@ import { ClubType } from "../Enums/ClubType";
 import { Genre } from "../Enums/Genre";
 import { Formik, Field, Form } from "formik";
 import useAuthApi from "../hooks/useAuthApi";
+import { useCsrfToken } from "../context/CsrfTokenContext";
 
 const App = () => {
   const [bookclubs, setBookclubs] = useState([]);
@@ -13,6 +14,7 @@ const App = () => {
   const [currentClub, setCurrentClub] = useState({});
   const api = useAuthApi();
   const [libraries, setLibraries] = useState([]);
+  const { csrfToken } = useCsrfToken();
 
   useEffect(() => {
     (async () => {
@@ -36,23 +38,38 @@ const App = () => {
   async function CreateClub(values) {
     try {
       values.isOpen = true;
-      const response = await api.post(`/BookClub/createclub`, values);
-      values.librariesId = Number(values.librariesId); // Convert librariesId to a number
+      values.librariesId = Number(values.librariesId);
       console.log("the values being sent to server: ", values);
+      
+      const response = await api.post("/BookClub/createclub", values, {
+        headers: { "X-XSRF-TOKEN": csrfToken },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Request Failed: ${response.status}`);
+      }
 
       alert("Club Created successfully");
       ListClubs();
       setIsModalOpen(false);
     } catch (error) {
-      alert("Error creating club");
+      console.error("Error in CreateClub: ", error);
+      alert(error.message || "Error creating club");
     }
   }
-  
+
   async function UpdateClub(id, values) {
     try {
-      const response = await api.put(`/BookClub/updateclub/${id}`, values);
       values.librariesId = Number(values.librariesId);
       console.log("the values being sent to server: ", values);
+
+      const response = await api.post(`/BookClub/updateclub/${id}`, values, {
+        headers: { "X-XSRF-TOKEN": csrfToken },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Request Failed: ${response.status}`);
+      }
 
       alert("Club updated successfully");
       ListClubs();

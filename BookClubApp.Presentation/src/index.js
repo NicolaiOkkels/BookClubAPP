@@ -6,6 +6,7 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { Auth0Provider } from '@auth0/auth0-react';
+import { CsrfTokenProvider } from './context/CsrfTokenContext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 const domain = process.env.REACT_APP_AUTH0_DOMAIN; //TODO: change from env at release and is only for test
@@ -24,7 +25,9 @@ root.render(
           scope: "openid profile",
          }}
       >
+        <CsrfTokenProvider>
         <App />
+        </CsrfTokenProvider>
       </Auth0Provider>
     </BrowserRouter>
   </>,
