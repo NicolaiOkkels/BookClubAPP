@@ -8,6 +8,5 @@ namespace BookClubApp.DataAccess.Entities
         public string CoverImage { get; set; }
         public string Pid { get; set; }
         public string MaterialType { get; set; }
-        public int? Score { get; set; }
     }
 }

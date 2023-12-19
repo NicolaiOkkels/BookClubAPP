@@ -13,14 +13,14 @@ namespace BookClubApp.Business.Services
             _bookRepository = bookRepository;
         }
 
-        public Task DeleteBookAsync(Book book)
+        public async Task DeleteBookAsync(Book book)
         {
-            throw new NotImplementedException();
+            await _bookRepository.DeleteBookAsync(book);   
         }
 
-        public Task<Book> GetBookByIdentifierAsync(int id)
+        public async Task<Book> GetBookByIdentifierAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _bookRepository.GetBookByIdentifierAsync(id);
         }
 
         public async Task<IEnumerable<Book>> GetBooksAsync()
@@ -38,6 +38,11 @@ namespace BookClubApp.Business.Services
         {
             var updatedBook = await _bookRepository.UpdateBookAsync(id, book);
             return updatedBook;
+        }
+
+        public async Task SaveChangesAsync()
+        {
+            await _bookRepository.SaveChangesAsync();
         }
     }
 }

@@ -4,6 +4,7 @@ using BookClubApp.DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookClubApp.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231218225023_UpdateRatingEntity")]
+    partial class UpdateRatingEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -46,6 +49,9 @@ namespace BookClubApp.DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("Score")
+                        .HasColumnType("int");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -62,6 +68,7 @@ namespace BookClubApp.DataAccess.Migrations
                             CoverImage = "https://moreinfo.addi.dk/2.11/more_info_get.php?lokalid=137198843&attachment_type=forside_stor&bibliotek=870970&source_id=870970&key=fb7fb908d05c9c08b16d",
                             MaterialType = "bøger",
                             Pid = "870970-basis:137198843",
+                            Score = 5,
                             Title = "Harry Potter og De Vises Sten"
                         });
                 });

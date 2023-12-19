@@ -22,7 +22,20 @@ namespace BookClubApp.Business.Controllers
         {
             try
             {
-                await _ratingService.AddRatingAsync(rating);
+                var existingRating = await _ratingService.GetRatingAsync(rating.MemberId, rating.BookId);
+
+                if (existingRating == null)
+                {
+                    // If no such rating exists, create a new one
+                    await _ratingService.AddRatingAsync(rating);
+                }
+                else
+                {
+                    // If a rating from the same member for the same book already exists, update it
+                    existingRating.Score = rating.Score;
+                    await _ratingService.UpdateRatingAsync(existingRating);
+                }
+
                 return Ok();
             }
             catch (Exception ex)

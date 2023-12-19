@@ -7,5 +7,6 @@ namespace BookClubApp.DataAccess.Repositories
         Task<Rating> GetRatingAsync(int memberId, int bookId);
         Task AddRatingAsync(Rating rating);
         Task<IEnumerable<Rating>> GetRatingsForBookAsync(int bookId);
+        Task UpdateRatingAsync(Rating rating);
     }
 }

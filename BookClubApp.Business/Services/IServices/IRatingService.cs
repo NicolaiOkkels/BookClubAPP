@@ -6,5 +6,8 @@ namespace BookClubApp.Business.Services
     {
         Task AddRatingAsync(Rating rating);
         Task<double> GetAverageRatingAsync(int bookId);
+        Task<Rating> GetRatingAsync(int memberId, int bookId);
+        Task UpdateRatingAsync(Rating rating);
+        
     }
 }
