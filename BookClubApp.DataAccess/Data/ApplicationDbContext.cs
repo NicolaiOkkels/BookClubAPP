@@ -44,8 +44,8 @@ namespace BookClubApp.DataAccess.Data
             );
 
             modelBuilder.Entity<BookClub>().HasData(
-              new { Id = 1, Name = "Book Club 1", Description = "Description of Book Club 1", Type = ClubType.Online.ToString(), LibrariesId = 1, Genre = Genres.Fiction.ToString(), IsOpen = true, MemberId = 3},
-            new { Id = 2, Name = "Book Club 2", Description = "Description of Book Club 2", Type = ClubType.Local.ToString(), LibrariesId = 2, Genre = Genres.NonFiction.ToString(), IsOpen = false, MemberId = 3}
+              new { Id = 1, Name = "Book Club 1", Description = "Description of Book Club 1", Type = ClubType.Online.ToString(), LibrariesId = 1, Genre = Genres.Fiction.ToString(), IsOpen = true, MemberId = 2},
+            new { Id = 2, Name = "Book Club 2", Description = "Description of Book Club 2", Type = ClubType.Local.ToString(), LibrariesId = 2, Genre = Genres.NonFiction.ToString(), IsOpen = false, MemberId = 2}
 );
 
 
