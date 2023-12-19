@@ -9,6 +9,6 @@ namespace BookClubApp.Business.Services
         Task<Book> AddBookAsync(Book book);
         Task<Book> UpdateBookAsync(int id, Book book);
         Task DeleteBookAsync(Book book);
-
+        Task SaveChangesAsync();
     }
 }

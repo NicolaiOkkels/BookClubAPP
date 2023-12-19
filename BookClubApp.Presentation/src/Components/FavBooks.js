@@ -3,53 +3,69 @@ import useAuthApi from "../hooks/useAuthApi";
 import Modal from "react-modal";
 import { Card, Button } from 'react-bootstrap';
 import { Score } from '../Enums/Score';
+import { useAuth0 } from "@auth0/auth0-react";
 
 const App = () => {
   const [books, setBooks] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedBookIndex, setSelectedBookIndex] = useState(null);
   const api = useAuthApi();
+  const { user } = useAuth0();
 
   useEffect(() => {
-    (async () => {
-      await ListBooks();
-    })();
+    fetchBooks();
     Modal.setAppElement("#root");
   }, []);
 
-  async function ListBooks() {
+  const fetchBooks = async () => {
     const result = await api.get("/Books/getbooks");
-    const booksWithScores = await Promise.all(result.data.map(async book => {
-      const ratingResult = await GetRatingById(book.id);
-      return { ...book, rating: ratingResult };
-    }));
+    const booksWithScores = await Promise.all(result.data.map(fetchRating));
     setBooks(booksWithScores);
-    console.log("showing books: ", booksWithScores);
   }
-  async function saveRating() {
+
+  const fetchRating = async (book) => {
+    const ratingResult = await api.get(`/Rating/avg/${book.id}`);
+    return { ...book, rating: ratingResult.data };
+  }
+
+  const saveRating = async () => {
     const book = books[selectedBookIndex];
-    const result = await api.put(`/Books/updatebook/${book.id}`, book);
-    console.log(`Saved rating for ID ${book.id}: `, result.data);
-    ListBooks();
+    const memberResponse = await api.get(`/Member/getmemberbyemail?email=${user.email}`);
+    const member = memberResponse.data;
+    const score = Number(book.score);
+
+    if (isNaN(score) || score < 1 || score > 5) {
+      console.log('Invalid score. Score must be a number between 1 and 5.');
+      return;
+    }
+
+    const ratingData = {
+      BookId: book.id,
+      MemberId: member.id,
+      Score: score
+    };
+
+    await api.post(`/Rating/AddRating`, ratingData);
+    fetchBooks();
   }
 
-  async function GetRatingById(id) {
-    const result = await api.get(`/Rating/avg/${id}`);
-    console.log(`Showing rating for ID ${id}: `, result.data);
+  const deleteBook = async (bookId) => {
+    await api.delete(`/Books/deletebook/${bookId}`);
+    fetchBooks();
   }
 
-  function handleScoreChange(e) {
+  const handleScoreChange = (e) => {
     const newBooks = [...books];
-    newBooks[selectedBookIndex].score = e.target.value || "" ;
+    newBooks[selectedBookIndex].score = e.target.value || "";
     setBooks(newBooks);
   }
 
-  function openModal(index) {
+  const openModal = (index) => {
     setSelectedBookIndex(index);
     setIsModalOpen(true);
   }
 
-  function closeModal() {
+  const closeModal = () => {
     setIsModalOpen(false);
   }
 
@@ -63,28 +79,29 @@ const App = () => {
               <Card.Body>
                 <Card.Title>{book.title}</Card.Title>
                 <Card.Text>{book.author}</Card.Text>
-                <Card.Text>Rating: {book.score}</Card.Text>
-  
+                <Card.Text>Rating: {book.rating}</Card.Text>
+
                 <Button variant="primary" onClick={() => openModal(index)}>Add Rating</Button>
+                <Button variant="danger" onClick={() => deleteBook(book.id)}>Delete Book</Button>
               </Card.Body>
             </Card>
           </div>
         ))}
       </div>
       <Modal isOpen={isModalOpen} onRequestClose={closeModal}>
-  <h2>Add Rating</h2>
-  <select 
-    name={`book-score-${selectedBookIndex}`} 
-    value={books[selectedBookIndex]?.score ?? ""} 
-    onChange={handleScoreChange}
-  >
-    <option value="" disabled>Select Score</option>
-    {Object.entries(Score).map(([key, value]) => (
-      <option key={key} value={value}>{value}</option>
-    ))}
-  </select>
-  <Button variant="primary" onClick={() => { saveRating(); closeModal(); }}>Save Rating</Button>
-</Modal>
+        <h2>Add Rating</h2>
+        <select
+          name={`book-score-${selectedBookIndex}`}
+          value={books[selectedBookIndex]?.score ?? ""}
+          onChange={handleScoreChange}
+        >
+          <option value="" disabled>Select Score</option>
+          {Object.entries(Score).map(([key, value]) => (
+            <option key={key} value={value}>{value}</option>
+          ))}
+        </select>
+        <Button variant="primary" onClick={() => { saveRating(); closeModal(); }}>Save Rating</Button>
+      </Modal>
     </div>
   );
 };

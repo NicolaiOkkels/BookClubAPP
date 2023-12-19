@@ -16,23 +16,33 @@ namespace BookClubApp.DataAccess.Repositories
         public async Task<Book> AddBookAsync(Book book)
         {
             _context.Books.Add(book);
-            await _context.SaveChangesAsync();   
+            await _context.SaveChangesAsync();
             return book;
         }
 
         public Task DeleteBookAsync(Book book)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(_context.Books.Remove(book));
         }
 
-        public Task<Book> GetBookByIdentifierAsync(string identifier)
+        public async Task<Book> GetBookByIdentifierAsync(int id)
         {
-            throw new NotImplementedException();
+            var book = await _context.Books.FirstOrDefaultAsync(b => b.Id == id);
+            if (book == null)
+            {
+                throw new Exception($"No book found with ID {id}");
+            }
+            return book;
         }
 
         public async Task<IEnumerable<Book>> GetBooksAsync()
         {
             return await _context.Books.ToListAsync();
+        }
+
+        public Task SaveChangesAsync()
+        {
+            return _context.SaveChangesAsync();
         }
 
         public async Task<Book> UpdateBookAsync(int id, Book book)
