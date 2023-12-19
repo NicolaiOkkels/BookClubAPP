@@ -127,7 +127,7 @@ namespace BookClubApp.DataAccess.Migrations
                             Genre = "Fiction",
                             IsOpen = true,
                             LibrariesId = 1,
-                            MemberId = 3,
+                            MemberId = 2,
                             Name = "Book Club 1",
                             Type = "Online"
                         },
@@ -138,7 +138,7 @@ namespace BookClubApp.DataAccess.Migrations
                             Genre = "NonFiction",
                             IsOpen = false,
                             LibrariesId = 2,
-                            MemberId = 3,
+                            MemberId = 2,
                             Name = "Book Club 2",
                             Type = "Local"
                         });

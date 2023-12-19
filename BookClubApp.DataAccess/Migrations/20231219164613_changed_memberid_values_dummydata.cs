@@ -15,14 +15,14 @@ namespace BookClubApp.DataAccess.Migrations
                 keyColumn: "Id",
                 keyValue: 1,
                 column: "MemberId",
-                value: 3);
+                value: 2);
 
             migrationBuilder.UpdateData(
                 table: "BookClubs",
                 keyColumn: "Id",
                 keyValue: 2,
                 column: "MemberId",
-                value: 3);
+                value: 2);
         }
 
         /// <inheritdoc />
