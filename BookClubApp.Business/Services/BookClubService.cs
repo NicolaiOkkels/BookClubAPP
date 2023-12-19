@@ -42,6 +42,11 @@ namespace BookClubApp.Business.Services
             return await _bookClubRepository.GetBookClubsAsync();
         }
 
+        public async Task<IEnumerable<BookClub>> GetBookClubsByEmailAsync(string email)
+        {
+            return await _bookClubRepository.GetBookClubsByEmailAsync(email);
+        }
+
         public async Task<BookClub> UpdateBookClubAsync(int id, BookClub bookClub)
         {
             var updatedBookClub = await _bookClubRepository.UpdateBookClubAsync(id, bookClub);

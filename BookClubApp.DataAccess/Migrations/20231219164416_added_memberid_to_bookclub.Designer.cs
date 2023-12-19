@@ -4,6 +4,7 @@ using BookClubApp.DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookClubApp.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231219164416_added_memberid_to_bookclub")]
+    partial class added_memberid_to_bookclub
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -124,7 +127,6 @@ namespace BookClubApp.DataAccess.Migrations
                             Genre = "Fiction",
                             IsOpen = true,
                             LibrariesId = 1,
-                            MemberId = 3,
                             Name = "Book Club 1",
                             Type = "Online"
                         },
@@ -135,7 +137,6 @@ namespace BookClubApp.DataAccess.Migrations
                             Genre = "NonFiction",
                             IsOpen = false,
                             LibrariesId = 2,
-                            MemberId = 3,
                             Name = "Book Club 2",
                             Type = "Local"
                         });

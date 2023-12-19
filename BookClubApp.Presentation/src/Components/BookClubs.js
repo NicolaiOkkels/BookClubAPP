@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import Modal from "react-modal";
-import { ClubType } from "../Enums/ClubType";
+import { useAuth0 } from "@auth0/auth0-react";
 import { Genre } from "../Enums/Genre";
 import { Formik, Field, Form } from "formik";
 import useAuthApi from "../hooks/useAuthApi";
@@ -15,7 +14,7 @@ const App = () => {
   const [libraries, setLibraries] = useState([]);
   const [sortGenre, setSortGenre] = useState('');
   const [sortType, setSortType] = useState('');
-  const [filterName, setFilterName] = useState('');
+  const { user, isAuthenticated } = useAuth0();
 
   const ClubType = {
     Online: 1,
@@ -45,8 +44,6 @@ const App = () => {
   }, []);
 
   async function ListClubs() {
-    //const result = await api.get("/BookClub/getclubs");
-    //setBookclubs(result.data);
     const queryString = new URLSearchParams({
       genre: sortGenre,
       type: sortType
@@ -63,10 +60,21 @@ const App = () => {
   }
 
   async function CreateClub(values) {
+    if (!isAuthenticated || !user) return;
+
     try {
-      values.isOpen = true;
-      const response = await api.post(`/BookClub/createclub`, values);
-      values.librariesId = Number(values.librariesId); // Convert librariesId to a number
+      const memberIdResponse = await api.get(`/Member/getmemberid?email=${user?.email}`);
+      const memberId = memberIdResponse.data;
+
+      values = {
+        ...values,
+        memberId: memberId,
+        isOpen: true,
+        librariesId: Number(values.librariesId)
+      };
+      
+      await api.post(`/BookClub/createclub`, values);
+
       console.log("the values being sent to server: ", values);
 
       alert("Club Created successfully");

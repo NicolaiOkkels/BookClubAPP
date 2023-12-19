@@ -38,6 +38,9 @@ const NavMenu = () => {
               <NavLink tag={Link} className="text-dark" to="/bookclubs">BookClubs</NavLink>
             </NavItem>
             <NavItem>
+              <NavLink tag={Link} className="text-dark" to="/mybookclubs">My bookclubs</NavLink>
+            </NavItem>
+            <NavItem>
               <Profile />
             </NavItem>
             <NavItem>

@@ -27,16 +27,31 @@ namespace BookClubApp.Business.Controllers
             return Ok(bookClubs);
         }
 
+        [HttpGet("mybookclubs")]
+        public async Task<IActionResult> GetBookClubsByEmail(string email)
+        {
+            Console.WriteLine(email);
+            if (string.IsNullOrEmpty(email))
+            {
+                return BadRequest("Email is required");
+            }
+
+            var bookClubs = await _bookClubService.GetBookClubsByEmailAsync(email);
+            Console.WriteLine(bookClubs.ToString());
+            return Ok(bookClubs);
+        }
+
+
         [HttpGet("getclub/{id}")]
         public async Task<IActionResult> GetBookClubById(int id)
         {
             var bookClub = await _bookClubService.GetBookClubByIdAsync(id);
             return Ok(bookClub);
         }
+        
         [HttpPost("createclub")]
         public async Task<IActionResult> CreateBookClub(BookClub bookClub)
         {
-            //TODO: Get member from token
             var createdBookClub = await _bookClubService.CreateBookClubAsync(bookClub);
             return CreatedAtAction(nameof(GetBookClubById), new {id = createdBookClub.Id}, createdBookClub);
         }

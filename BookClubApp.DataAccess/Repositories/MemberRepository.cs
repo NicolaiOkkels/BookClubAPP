@@ -25,6 +25,16 @@ namespace BookClubApp.DataAccess.Repositories
             return _context.Members.FirstOrDefaultAsync(m => m.Email == email);
         }
 
+        public async Task<int> GetMemberIdByEmailAsync(string email)
+        {
+            var member = await _context.Members.FirstOrDefaultAsync(m => m.Email == email);
+            if (member == null)
+            {
+                throw new Exception("Member not found.");
+            }
+            return member.Id;
+        }
+
         public async Task<IEnumerable<Member>> GetMembersAsync()
         {
             return await _context.Members.ToListAsync();
