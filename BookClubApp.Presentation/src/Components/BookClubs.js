@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import Modal from "react-modal";
-import { ClubType } from "../Enums/ClubType";
+import { useAuth0 } from "@auth0/auth0-react";
 import { Genre } from "../Enums/Genre";
 import { Formik, Field, Form } from "formik";
 import useAuthApi from "../hooks/useAuthApi";
@@ -13,6 +12,28 @@ const App = () => {
   const [currentClub, setCurrentClub] = useState({});
   const api = useAuthApi();
   const [libraries, setLibraries] = useState([]);
+  const [sortGenre, setSortGenre] = useState('');
+  const [sortType, setSortType] = useState('');
+  const { user, isAuthenticated } = useAuth0();
+
+  const ClubType = {
+    Online: 1,
+    Local: 2,
+  };
+  
+  const Genres = {
+    Fiction: 1,
+    Fantasy: 2,
+    ScienceFiction: 3,
+    Mystery: 4,
+    Thriller: 5,
+    Romance: 6,
+    Western: 7,
+    Dystopian: 8,
+    Horror: 9,
+    HistoricalFiction: 10,
+    NonFiction: 11,
+  };
 
   useEffect(() => {
     (async () => {
@@ -23,7 +44,12 @@ const App = () => {
   }, []);
 
   async function ListClubs() {
-    const result = await api.get("/BookClub/getclubs");
+    const queryString = new URLSearchParams({
+      genre: sortGenre,
+      type: sortType
+    }).toString();
+  
+    const result = await api.get(`/BookClub/bookclubs/sorted?${queryString}`);
     setBookclubs(result.data);
   }
 
@@ -34,10 +60,21 @@ const App = () => {
   }
 
   async function CreateClub(values) {
+    if (!isAuthenticated || !user) return;
+
     try {
-      values.isOpen = true;
-      const response = await api.post(`/BookClub/createclub`, values);
-      values.librariesId = Number(values.librariesId); // Convert librariesId to a number
+      const memberIdResponse = await api.get(`/Member/getmemberid?email=${user?.email}`);
+      const memberId = memberIdResponse.data;
+
+      values = {
+        ...values,
+        memberId: memberId,
+        isOpen: true,
+        librariesId: Number(values.librariesId)
+      };
+      
+      await api.post(`/BookClub/createclub`, values);
+
       console.log("the values being sent to server: ", values);
 
       alert("Club Created successfully");
@@ -78,6 +115,31 @@ const App = () => {
         >
           Create New Club
         </button>
+      </div>
+      <div style={{ marginBottom: '20px' }}>
+      <select value={sortGenre} onChange={(e) => setSortGenre(e.target.value)}>
+      <option value="">Select Genre</option>
+      {Object.entries(Genres).map(([key]) => (
+        <option key={key} value={key}>{key}</option>
+      ))}
+      </select>
+
+      <select value={sortType} onChange={(e) => setSortType(e.target.value)}>
+        <option value="">Select Type</option>
+        {Object.entries(ClubType).map(([key]) => (
+          <option key={key} value={key}>{key}</option>
+        ))}
+      </select>
+
+        <button onClick={ListClubs}>Search</button>
+      </div>
+
+      <div className="row">
+        {bookclubs?.map((bookclub, index) => (
+          <div className="col-sm-3 mb-3" key={index}>
+            {/* Your code for displaying each bookclub */}
+          </div>
+        ))}
       </div>
       <Modal isOpen={isModalOpen}>
         <button onClick={() => setIsModalOpen(false)}>Close</button>

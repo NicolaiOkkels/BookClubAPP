@@ -13,5 +13,7 @@ namespace BookClubApp.DataAccess.Entities
         public required string Genre { get; set; }
         public required bool IsOpen { get; set; }
         public Book? Book { get; set; }
+        public int? MemberId { get; set; }
+        public Member? Member { get; set; }
     }
 }

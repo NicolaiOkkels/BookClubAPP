@@ -35,6 +35,19 @@ namespace BookClubApp.DataAccess.Repositories
         {
             return await _context.BookClubs.ToListAsync();
         }
+        public async Task<IEnumerable<BookClub>> GetBookClubsByEmailAsync(string email)
+        {
+            Console.WriteLine("before");
+
+            var t = await _context.BookClubs
+                        .Include(bookClub => bookClub.Member)
+                        .Where(bookClub => bookClub.Member.Email == email)
+                        .ToListAsync();
+            Console.WriteLine("after");   
+            Console.WriteLine(t.ToString());        
+
+            return t;
+        }
 
         public async Task<BookClub> UpdateBookClubAsync(int id, BookClub bookClub)
         {

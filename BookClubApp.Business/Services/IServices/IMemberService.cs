@@ -7,5 +7,6 @@ namespace BookClubApp.Business.Services
         Task<Member?> AddMemberAsync(Member member);
         Task<IEnumerable<Member>> GetMemberAsync();
         Task<Member?> GetMemberByEmailAsync(string email);
+        Task<int> GetMemberIdByEmailAsync(string email);
     }
 }

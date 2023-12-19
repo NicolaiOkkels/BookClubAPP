@@ -2,6 +2,7 @@ import BookSearch from "./Components/BookSearch";
 import Home from "./Components/Home";
 import BookClubs from "./Components/BookClubs";
 import FavBooks from "./Components/FavBooks";
+import MyBookClubs from "./Components/MyBookClubs";
 
 const AppRoutes = [
   {
@@ -19,6 +20,10 @@ const AppRoutes = [
   {
     path: "/bookclubs",
     element: <BookClubs />,
+  },
+  {
+    path: "/mybookclubs",
+    element: <MyBookClubs />,
   },
 ];
 

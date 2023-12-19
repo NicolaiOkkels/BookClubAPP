@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import ApolloClient, { gql } from "apollo-boost";
+import { ApolloClient, InMemoryCache, createHttpLink, gql } from '@apollo/client';
+import { setContext } from '@apollo/client/link/context';
 import useAuthApi from "../hooks/useAuthApi";
-
-
-
+ 
 // Define your Card component
 const Card = ({ title, creator, cover, materialTypes }) => (
   <div style={{
@@ -28,17 +27,24 @@ const Card = ({ title, creator, cover, materialTypes }) => (
     </div>
   </div>
 );
-
-const client = new ApolloClient({
+ 
+const httpLink = createHttpLink({
   uri: 'https://fbi-api.dbc.dk/complex-search/graphql',
-  request: operation => {
-    const token = process.env.REACT_APP_AUTH_TOKEN; // replace with your actual token
-    operation.setContext({
-      headers: {
-        Authorization: token ? `Bearer ${token}` : ''
-      }
-    });
+});
+ 
+const authLink = setContext((_, { headers }) => {
+  const token = process.env.REACT_APP_AUTH_TOKEN;
+  return {
+    headers: {
+      ...headers,
+      authorization: token ? `Bearer ${token}` : "",
+    }
   }
+});
+ 
+const client = new ApolloClient({
+  link: authLink.concat(httpLink),
+  cache: new InMemoryCache()
 });
 
 const SEARCH_QUERY = gql`

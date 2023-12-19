@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using BookClubApp.Business.Services;
 using BookClubApp.DataAccess.Entities;
 using Microsoft.AspNetCore.Authorization;
@@ -44,12 +45,26 @@ public class MemberController : ControllerBase
             throw new Exception(ex.Message);
         }
     }
+
     [HttpPost("addmember")]
     public async Task<IActionResult> AddMember(Member member)
     {
         try
         {
             return Ok(await _memberService.AddMemberAsync(member));
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message);
+        }
+    }
+
+    [HttpGet("getmemberid")]
+    public async Task<IActionResult> GetMemberIdByEmail(string email)
+    {
+        try
+        {
+            return Ok(await _memberService.GetMemberIdByEmailAsync(email));
         }
         catch (Exception ex)
         {

@@ -1,6 +1,7 @@
 
 using BookClubApp.DataAccess.Entities;
 using BookClubApp.DataAccess.Repositories;
+using Microsoft.Data.SqlClient;
 
 namespace BookClubApp.Business.Services
 {
@@ -32,5 +33,10 @@ namespace BookClubApp.Business.Services
 
         return existingMember; 
     }
+
+        public async Task<int> GetMemberIdByEmailAsync(string email)
+        {
+            return await _memberRepository.GetMemberIdByEmailAsync(email);
+        }
     }
 }
