@@ -37,4 +37,17 @@ public class BooksController : ControllerBase
         var updatedBook = await _searchService.UpdateBookAsync(id, book);
         return Ok(updatedBook);
     }
+
+    [HttpDelete("deletebook/{id}")]
+    public async Task<IActionResult> DeleteBook(int id)
+    {
+        var book = await _searchService.GetBookByIdentifierAsync(id);
+        if (book == null)
+        {
+            return NotFound();
+        }
+        _searchService.DeleteBookAsync(book);
+        await _searchService.SaveChangesAsync();
+        return Ok();
+    }
 }

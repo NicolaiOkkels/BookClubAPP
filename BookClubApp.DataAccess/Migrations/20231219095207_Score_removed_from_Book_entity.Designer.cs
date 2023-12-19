@@ -4,6 +4,7 @@ using BookClubApp.DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookClubApp.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231219095207_Score_removed_from_Book_entity")]
+    partial class Score_removed_from_Book_entity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -91,9 +94,6 @@ namespace BookClubApp.DataAccess.Migrations
                     b.Property<int?>("LibrariesId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("MemberId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -108,8 +108,6 @@ namespace BookClubApp.DataAccess.Migrations
 
                     b.HasIndex("LibrariesId");
 
-                    b.HasIndex("MemberId");
-
                     b.ToTable("BookClubs");
 
                     b.HasData(
@@ -120,7 +118,6 @@ namespace BookClubApp.DataAccess.Migrations
                             Genre = "Fiction",
                             IsOpen = true,
                             LibrariesId = 1,
-                            MemberId = 3,
                             Name = "Book Club 1",
                             Type = "Online"
                         },
@@ -131,7 +128,6 @@ namespace BookClubApp.DataAccess.Migrations
                             Genre = "NonFiction",
                             IsOpen = false,
                             LibrariesId = 2,
-                            MemberId = 3,
                             Name = "Book Club 2",
                             Type = "Local"
                         });
@@ -340,15 +336,9 @@ namespace BookClubApp.DataAccess.Migrations
                         .WithMany()
                         .HasForeignKey("LibrariesId");
 
-                    b.HasOne("BookClubApp.DataAccess.Entities.Member", "Member")
-                        .WithMany()
-                        .HasForeignKey("MemberId");
-
                     b.Navigation("Book");
 
                     b.Navigation("Libraries");
-
-                    b.Navigation("Member");
                 });
 
             modelBuilder.Entity("BookClubApp.DataAccess.Entities.Membership", b =>
