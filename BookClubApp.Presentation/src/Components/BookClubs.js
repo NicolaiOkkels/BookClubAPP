@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import Modal from "react-modal";
 import { useAuth0 } from "@auth0/auth0-react";
 import { Genre } from "../Enums/Genre";
@@ -12,15 +12,15 @@ const App = () => {
   const [currentClub, setCurrentClub] = useState({});
   const api = useAuthApi();
   const [libraries, setLibraries] = useState([]);
-  const [sortGenre, setSortGenre] = useState('');
-  const [sortType, setSortType] = useState('');
+  const [sortGenre, setSortGenre] = useState("");
+  const [sortType, setSortType] = useState("");
   const { user, isAuthenticated } = useAuth0();
 
   const ClubType = {
     Online: 1,
     Local: 2,
   };
-  
+
   const Genres = {
     Fiction: 1,
     Fantasy: 2,
@@ -35,44 +35,46 @@ const App = () => {
     NonFiction: 11,
   };
 
+  const ListClubs = useCallback(async () => {
+    const queryString = new URLSearchParams({
+      genre: sortGenre,
+      type: sortType,
+    }).toString();
+
+    const result = await api.get(`/BookClub/bookclubs/sorted?${queryString}`);
+    setBookclubs(result.data);
+  }, [sortGenre, sortType, api, setBookclubs]);
+
+  const ListLibraries = useCallback(async () => {
+    const result = await api.get("/Library/getlibraries");
+    setLibraries(result.data);
+    console.log("list of libraries ", result.data);
+  }, [api, setLibraries]); // Add any dependencies here
+
   useEffect(() => {
     (async () => {
       await ListClubs();
       await ListLibraries();
     })();
     Modal.setAppElement("#root");
-  }, []);
-
-  async function ListClubs() {
-    const queryString = new URLSearchParams({
-      genre: sortGenre,
-      type: sortType
-    }).toString();
-  
-    const result = await api.get(`/BookClub/bookclubs/sorted?${queryString}`);
-    setBookclubs(result.data);
-  }
-
-  async function ListLibraries() {
-    const result = await api.get("/Library/getlibraries");
-    setLibraries(result.data);
-    console.log("list of libraries ", result.data);
-  }
+  }, [ListClubs, ListLibraries]);
 
   async function CreateClub(values) {
     if (!isAuthenticated || !user) return;
 
     try {
-      const memberIdResponse = await api.get(`/Member/getmemberid?email=${user?.email}`);
+      const memberIdResponse = await api.get(
+        `/Member/getmemberid?email=${user?.email}`
+      );
       const memberId = memberIdResponse.data;
 
       values = {
         ...values,
         memberId: memberId,
         isOpen: true,
-        librariesId: Number(values.librariesId)
+        librariesId: Number(values.librariesId),
       };
-      
+
       await api.post(`/BookClub/createclub`, values);
 
       console.log("the values being sent to server: ", values);
@@ -84,10 +86,10 @@ const App = () => {
       alert("Error creating club");
     }
   }
-  
+
   async function UpdateClub(id, values) {
     try {
-      const response = await api.put(`/BookClub/updateclub/${id}`, values);
+      await api.put(`/BookClub/updateclub/${id}`, values);
       values.librariesId = Number(values.librariesId);
       console.log("the values being sent to server: ", values);
 
@@ -116,20 +118,27 @@ const App = () => {
           Create New Club
         </button>
       </div>
-      <div style={{ marginBottom: '20px' }}>
-      <select value={sortGenre} onChange={(e) => setSortGenre(e.target.value)}>
-      <option value="">Select Genre</option>
-      {Object.entries(Genres).map(([key]) => (
-        <option key={key} value={key}>{key}</option>
-      ))}
-      </select>
+      <div style={{ marginBottom: "20px" }}>
+        <select
+          value={sortGenre}
+          onChange={(e) => setSortGenre(e.target.value)}
+        >
+          <option value="">Select Genre</option>
+          {Object.entries(Genres).map(([key]) => (
+            <option key={key} value={key}>
+              {key}
+            </option>
+          ))}
+        </select>
 
-      <select value={sortType} onChange={(e) => setSortType(e.target.value)}>
-        <option value="">Select Type</option>
-        {Object.entries(ClubType).map(([key]) => (
-          <option key={key} value={key}>{key}</option>
-        ))}
-      </select>
+        <select value={sortType} onChange={(e) => setSortType(e.target.value)}>
+          <option value="">Select Type</option>
+          {Object.entries(ClubType).map(([key]) => (
+            <option key={key} value={key}>
+              {key}
+            </option>
+          ))}
+        </select>
 
         <button onClick={ListClubs}>Search</button>
       </div>

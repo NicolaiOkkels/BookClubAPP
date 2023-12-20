@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import useAuthApi from "../hooks/useAuthApi";
 import Modal from "react-modal";
 import { Card, Button } from 'react-bootstrap';
@@ -12,27 +12,29 @@ const App = () => {
   const api = useAuthApi();
   const { user } = useAuth0();
 
-  useEffect(() => {
-    fetchBooks();
-    Modal.setAppElement("#root");
-  }, []);
-
-  const fetchBooks = async () => {
+  const fetchRating = useCallback(async (book) => {
+    const ratingResult = await api.get(`/Rating/avg/${book.id}`);
+    return { ...book, rating: ratingResult.data };
+  }, [api]);
+  
+  const fetchBooks = useCallback(async () => {
     const result = await api.get("/Books/getbooks");
     const booksWithScores = await Promise.all(result.data.map(fetchRating));
     setBooks(booksWithScores);
-  }
+  }, [api, fetchRating, setBooks]); 
 
-  const fetchRating = async (book) => {
-    const ratingResult = await api.get(`/Rating/avg/${book.id}`);
-    return { ...book, rating: ratingResult.data };
-  }
+  useEffect(() => {
+    fetchBooks();
+    Modal.setAppElement("#root");
+  }, [fetchBooks]);
+
 
   const saveRating = async () => {
     const book = books[selectedBookIndex];
     const memberResponse = await api.get(`/Member/getmemberbyemail?email=${user.email}`);
     const member = memberResponse.data;
     const score = Number(book.score);
+    console.log("username is: ", member.name);
 
     if (isNaN(score) || score < 1 || score > 5) {
       console.log('Invalid score. Score must be a number between 1 and 5.');

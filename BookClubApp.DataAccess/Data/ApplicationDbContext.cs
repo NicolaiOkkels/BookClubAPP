@@ -14,6 +14,7 @@ namespace BookClubApp.DataAccess.Data
         public DbSet<Membership> Memberships { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<Rating> Ratings { get; set; }
+        public DbSet<Message> Messages { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
