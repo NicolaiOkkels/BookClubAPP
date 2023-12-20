@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import useAuthApi from "../hooks/useAuthApi";
 
@@ -7,15 +7,9 @@ const MyBookClubs = () => {
   const { user, isAuthenticated } = useAuth0();
   const api = useAuthApi();
 
-  useEffect(() => {
-    (async () => {
-      fetchMyBookClubs();
-    })();
-  }, []);
-
-  async function fetchMyBookClubs() {
+  const fetchMyBookClubs = useCallback(async () => {
     if (!isAuthenticated || !user) return;
-
+  
     try {
       const result = await api.get(`/BookClub/mybookclubs?email=${user.email}`);
       console.log(result.data);
@@ -23,7 +17,13 @@ const MyBookClubs = () => {
     } catch (error) {
       console.error("Error fetching my bookclubs", error);
     }
-  }
+  }, [api, isAuthenticated, user, setMyBookClubs]); 
+
+  useEffect(() => {
+    (async () => {
+      fetchMyBookClubs();
+    })();
+  }, [fetchMyBookClubs]);
 
   return (
     <div className="container">
