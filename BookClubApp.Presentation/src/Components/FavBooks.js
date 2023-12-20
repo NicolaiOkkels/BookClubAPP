@@ -33,6 +33,7 @@ const App = () => {
     const memberResponse = await api.get(`/Member/getmemberbyemail?email=${user.email}`);
     const member = memberResponse.data;
     const score = Number(book.score);
+    console.log("username is: ", member.name);
 
     if (isNaN(score) || score < 1 || score > 5) {
       console.log('Invalid score. Score must be a number between 1 and 5.');

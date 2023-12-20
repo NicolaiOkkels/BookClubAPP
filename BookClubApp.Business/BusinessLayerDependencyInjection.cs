@@ -18,6 +18,7 @@ public static class BusinessLayerDependencyInjection
         services.AddScoped<IRatingService, RatingService>();
         services.AddScoped<ISearchService, SearchService>();
         services.AddScoped<ILibraryService, LibraryService>();
+        services.AddScoped<IMessageService, MessageService>();
     }
 
     public static void RegisterJWT(this IServiceCollection services, IConfiguration configuration)

@@ -41,11 +41,12 @@ const authLink = setContext((_, { headers }) => {
     }
   }
 });
- 
+
 const client = new ApolloClient({
   link: authLink.concat(httpLink),
   cache: new InMemoryCache()
 });
+
 
 const SEARCH_QUERY = gql`
   query ($cql: String!, $offset: Int!, $limit: PaginationLimit!, $filters: ComplexSearchFilters!) {
