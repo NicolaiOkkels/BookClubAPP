@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import Modal from "react-modal";
 import { useAuth0 } from "@auth0/auth0-react";
 import { Genre } from "../Enums/Genre";
+import { ClubType } from "../Enums/ClubType";
 import { Formik, Field, Form } from "formik";
 import useAuthApi from "../hooks/useAuthApi";
 
@@ -16,25 +17,6 @@ const App = () => {
   const [sortType, setSortType] = useState("");
   const { user, isAuthenticated } = useAuth0();
 
-  const ClubType = {
-    Online: 1,
-    Local: 2,
-  };
-
-  const Genres = {
-    Fiction: 1,
-    Fantasy: 2,
-    ScienceFiction: 3,
-    Mystery: 4,
-    Thriller: 5,
-    Romance: 6,
-    Western: 7,
-    Dystopian: 8,
-    Horror: 9,
-    HistoricalFiction: 10,
-    NonFiction: 11,
-  };
-
   const ListClubs = useCallback(async () => {
     const queryString = new URLSearchParams({
       genre: sortGenre,
@@ -48,7 +30,6 @@ const App = () => {
   const ListLibraries = useCallback(async () => {
     const result = await api.get("/Library/getlibraries");
     setLibraries(result.data);
-    console.log("list of libraries ", result.data);
   }, [api, setLibraries]); // Add any dependencies here
 
   useEffect(() => {
@@ -77,8 +58,6 @@ const App = () => {
 
       await api.post(`/BookClub/createclub`, values);
 
-      console.log("the values being sent to server: ", values);
-
       alert("Club Created successfully");
       ListClubs();
       setIsModalOpen(false);
@@ -87,16 +66,35 @@ const App = () => {
     }
   }
 
+  async function joinClub(bookclub) {
+    try {
+      const memberIdResponse = await api.get(`/Member/getmemberid?email=${user?.email}`);
+      const memberId = memberIdResponse.data;
+  
+      if (!memberId) {
+        throw new Error("Member ID not found");
+      }
+  
+      await api.post(`/BookClub/joinclub/${bookclub.id}/${memberId}`);
+      alert("Joined club successfully");
+      ListClubs();
+    } catch (error) {
+      console.error(error);
+      alert("Error joining club");
+    }
+  }
+
   async function UpdateClub(id, values) {
     try {
-      await api.put(`/BookClub/updateclub/${id}`, values);
       values.librariesId = Number(values.librariesId);
+      await api.put(`/BookClub/updateclub/${id}`, values);
       console.log("the values being sent to server: ", values);
-
+  
       alert("Club updated successfully");
       ListClubs();
       setIsUpdateModalOpen(false);
     } catch (error) {
+      console.error(error);
       alert("Error updating club");
     }
   }
@@ -124,7 +122,7 @@ const App = () => {
           onChange={(e) => setSortGenre(e.target.value)}
         >
           <option value="">Select Genre</option>
-          {Object.entries(Genres).map(([key]) => (
+          {Object.entries(Genre).map(([key]) => (
             <option key={key} value={key}>
               {key}
             </option>
@@ -381,6 +379,7 @@ const App = () => {
                       bookclub.isOpen ? "btn-success" : "btn-danger"
                     }`}
                     disabled={!bookclub.isOpen}
+                    onClick={() => joinClub(bookclub)}
                   >
                     {bookclub.isOpen ? "Join" : "Full"}
                   </button>

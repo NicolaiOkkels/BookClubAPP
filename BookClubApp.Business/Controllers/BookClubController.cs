@@ -14,10 +14,14 @@ namespace BookClubApp.Business.Controllers
     public class BookClubController : ControllerBase
     {
         private readonly IBookClubService _bookClubService;
+        private readonly IRoleService _roleService;
+        private readonly IMembershipService _membershipService;
 
-        public BookClubController(IBookClubService bookClubService)
+        public BookClubController(IBookClubService bookClubService, IRoleService roleService, IMembershipService membershipService)
         {
             _bookClubService = bookClubService;
+            _roleService = roleService;
+            _membershipService = membershipService;
         }
 
         [HttpGet("getclubs")]
@@ -48,12 +52,49 @@ namespace BookClubApp.Business.Controllers
             var bookClub = await _bookClubService.GetBookClubByIdAsync(id);
             return Ok(bookClub);
         }
-        
+
         [HttpPost("createclub")]
         public async Task<IActionResult> CreateBookClub(BookClub bookClub)
         {
-            var createdBookClub = await _bookClubService.CreateBookClubAsync(bookClub);
-            return CreatedAtAction(nameof(GetBookClubById), new {id = createdBookClub.Id}, createdBookClub);
+            var memberId = bookClub.MemberId;
+            if (memberId == null)
+            {
+                return BadRequest("Member not found");
+            }
+            var roleId = await _roleService.GetRoleIdByNameAsync("Owner");
+            if (roleId == null)
+            {
+                return BadRequest("Role not found");
+            }
+            var createdBookClub = await _bookClubService.CreateBookClubAsync(bookClub, memberId.Value, roleId.Value);
+            return CreatedAtAction(nameof(GetBookClubById), new { id = createdBookClub.Id }, createdBookClub);
+        }
+
+        [HttpPost("joinclub/{bookClubId}/{memberId}")]
+        public async Task<IActionResult> JoinBookClub(int bookClubId, int? memberId)
+        {
+            if (memberId == null)
+            {
+                return BadRequest("Member not found");
+            }
+            var roleId = await _roleService.GetRoleIdByNameAsync("Member");
+            if (roleId == null)
+            {
+                return BadRequest("Role not found");
+            }
+
+            // Create a new Membership object
+            var membership = new Membership
+            {
+                BookClubId = bookClubId,
+                MemberId = memberId.Value,
+                RoleId = roleId.Value
+            };
+
+            // Save the new Membership object to the database
+            await _membershipService.AddMembershipAsync(membership);
+
+            return Ok(membership);
         }
 
         [HttpPut("updateclub/{id}")]
