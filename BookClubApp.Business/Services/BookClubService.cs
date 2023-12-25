@@ -10,7 +10,6 @@ namespace BookClubApp.Business.Services
     {
         private readonly IBookClubRepository _bookClubRepository;
         private readonly IMembershipRepository _membershipRepository;
-        //private readonly IMapper _mapper;
 
         public BookClubService(IBookClubRepository bookClubRepository, IMembershipRepository membershipRepository)
         {
@@ -33,9 +32,9 @@ namespace BookClubApp.Business.Services
             return createdBookClub;
         }
 
-        public Task DeleteBookClubAsync(int id)
+        public async Task DeleteBookClubAsync(int id)
         {
-            throw new NotImplementedException();
+            await _bookClubRepository.DeleteBookClubAsync(id);
         }
 
         public async Task<BookClub> GetBookClubByIdAsync(int id)
@@ -50,10 +49,10 @@ namespace BookClubApp.Business.Services
             return await _bookClubRepository.GetBookClubsAsync();
         }
 
-        public async Task<IEnumerable<BookClub>> GetBookClubsByEmailAsync(string email)
-        {
-            return await _bookClubRepository.GetBookClubsByEmailAsync(email);
-        }
+        // public async Task<IEnumerable<BookClub>> GetBookClubsByEmailAsync(string email)
+        // {
+        //     return await _bookClubRepository.GetBookClubsByEmailAsync(email);
+        // }
 
         public async Task<Membership> JoinBookClubAsync(int bookClubId, int memberId, int roleId)
         {

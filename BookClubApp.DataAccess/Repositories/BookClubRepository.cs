@@ -20,9 +20,18 @@ namespace BookClubApp.DataAccess.Repositories
             return bookClub;
         }
 
-        public Task DeleteBookClubAsync(int id)
+        public async Task DeleteBookClubAsync(int id)
         {
-            throw new NotImplementedException();
+            var bookClub = await _context.BookClubs.FindAsync(id);
+            if (bookClub != null)
+            {
+                _context.BookClubs.Remove(bookClub);
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                throw new ArgumentException("Book club with the provided id doesn't exist.");
+            }
         }
 
 
@@ -35,19 +44,23 @@ namespace BookClubApp.DataAccess.Repositories
         {
             return await _context.BookClubs.ToListAsync();
         }
-        public async Task<IEnumerable<BookClub>> GetBookClubsByEmailAsync(string email)
-        {
-            Console.WriteLine("before");
+        //         public async Task<IEnumerable<BookClub>> GetBookClubsByEmailAsync(string email)
+        // {
+        //     Console.WriteLine("before");
 
-            var t = await _context.BookClubs
-                        .Include(bookClub => bookClub.Member)
-                        .Where(bookClub => bookClub.Member.Email == email)
-                        .ToListAsync();
-            Console.WriteLine("after");   
-            Console.WriteLine(t.ToString());        
+        //     var memberships = await _context.Memberships
+        //                         .Include(membership => membership.Member)
+        //                         .Include(membership => membership.BookClub)
+        //                         .Where(membership => membership.Member.Email == email)
+        //                         .ToListAsync();
+        //     Console.WriteLine("after");
+        //     Console.WriteLine(memberships.ToString());
 
-            return t;
-        }
+        //     // Extract the BookClub entities from the memberships
+        //     var bookClubs = memberships.Select(membership => membership.BookClub);
+
+        //     return bookClubs;
+        // }
 
         public async Task<BookClub> UpdateBookClubAsync(int id, BookClub bookClub)
         {

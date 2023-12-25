@@ -1,6 +1,5 @@
 using BookClubApp.Business.Services;
 using BookClubApp.DataAccess.Entities;
-using Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
@@ -31,21 +30,6 @@ namespace BookClubApp.Business.Controllers
             return Ok(bookClubs);
         }
 
-        [HttpGet("mybookclubs")]
-        public async Task<IActionResult> GetBookClubsByEmail(string email)
-        {
-            Console.WriteLine(email);
-            if (string.IsNullOrEmpty(email))
-            {
-                return BadRequest("Email is required");
-            }
-
-            var bookClubs = await _bookClubService.GetBookClubsByEmailAsync(email);
-            Console.WriteLine(bookClubs.ToString());
-            return Ok(bookClubs);
-        }
-
-
         [HttpGet("getclub/{id}")]
         public async Task<IActionResult> GetBookClubById(int id)
         {
@@ -70,32 +54,7 @@ namespace BookClubApp.Business.Controllers
             return CreatedAtAction(nameof(GetBookClubById), new { id = createdBookClub.Id }, createdBookClub);
         }
 
-        [HttpPost("joinclub/{bookClubId}/{memberId}")]
-        public async Task<IActionResult> JoinBookClub(int bookClubId, int? memberId)
-        {
-            if (memberId == null)
-            {
-                return BadRequest("Member not found");
-            }
-            var roleId = await _roleService.GetRoleIdByNameAsync("Member");
-            if (roleId == null)
-            {
-                return BadRequest("Role not found");
-            }
 
-            // Create a new Membership object
-            var membership = new Membership
-            {
-                BookClubId = bookClubId,
-                MemberId = memberId.Value,
-                RoleId = roleId.Value
-            };
-
-            // Save the new Membership object to the database
-            await _membershipService.AddMembershipAsync(membership);
-
-            return Ok(membership);
-        }
 
         [HttpPut("updateclub/{id}")]
         public async Task<IActionResult> UpdateBookClub(int id, BookClub bookClub)
@@ -105,13 +64,13 @@ namespace BookClubApp.Business.Controllers
         }
 
         [HttpGet("bookclubs/sorted")]
-        public async Task<IActionResult> GetSortedBookClubs(string sortBy = "genre", bool isOpen = true, string? genre = null, string? type = null)
+        public async Task<IActionResult> GetSortedBookClubs(string sortBy = "genre", string? genre = null, string? type = null)
         {
             var bookClubs = await _bookClubService.GetBookClubsAsync();
 
             Console.WriteLine("book club:" + bookClubs.Count());
 
-            var filteredBookClubs = bookClubs.Where(bc => bc.IsOpen == isOpen);
+            var filteredBookClubs = bookClubs;
 
             if (!string.IsNullOrEmpty(genre))
             {
@@ -142,5 +101,20 @@ namespace BookClubApp.Business.Controllers
             Console.WriteLine(sortedBookClubs);
             return Ok(sortedBookClubs);
         }
+
+        [HttpDelete("deleteclub/{id}")]
+        public async Task<IActionResult> DeleteBookClub(int id)
+        {
+            try
+            {
+                await _bookClubService.DeleteBookClubAsync(id);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
     }
 }

@@ -5,6 +5,9 @@ namespace BookClubApp.Business.Services
     public interface IMembershipService
     {
         Task<Membership> AddMembershipAsync(Membership membership);
-        Task<IEnumerable<Membership>> GetMembershipsAsync();
+        Task DeleteMembershipAsync(Membership membership);
+        Task<Membership> GetMembershipAsync(int bookClubId, int value);
+        Task<IEnumerable<Membership>> GetAllMembershipsAsync();
+        Task<IEnumerable<Membership>> GetMembershipsByEmailAsync(string email);
     }
 }

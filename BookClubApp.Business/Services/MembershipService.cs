@@ -13,14 +13,29 @@ namespace BookClubApp.Business.Services
             _membershipRepository = membershipRepository;
         }
 
-        public async Task<IEnumerable<Membership>> GetMembershipsAsync()
+        public async Task<IEnumerable<Membership>> GetAllMembershipsAsync()
         {
-            return await _membershipRepository.GetMembershipsAsync();
+            return await _membershipRepository.GetAllMembershipsAsync();
         }
 
         public async Task<Membership> AddMembershipAsync(Membership membership)
         {
             return await _membershipRepository.AddMembershipAsync(membership);
+        }
+
+        public async Task<IEnumerable<Membership>> GetMembershipsByEmailAsync(string email)
+        {
+            return await _membershipRepository.GetMembershipsByEmailAsync(email);
+        }
+
+        public async Task DeleteMembershipAsync(Membership membership)
+        {
+            await _membershipRepository.DeleteMembershipAsync(membership);
+        }
+
+        public async Task<Membership> GetMembershipAsync(int bookClubId, int value)
+        {
+            return await _membershipRepository.GetMembershipAsync(bookClubId, value);
         }
     }
 }

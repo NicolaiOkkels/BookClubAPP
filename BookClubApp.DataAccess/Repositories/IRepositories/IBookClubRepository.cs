@@ -10,6 +10,6 @@ namespace BookClubApp.DataAccess.Repositories
         Task<BookClub> CreateBookClubAsync(BookClub bookClub);
         Task<BookClub> UpdateBookClubAsync(int id, BookClub bookClub);
         Task DeleteBookClubAsync(int id);
-        Task<IEnumerable<BookClub>> GetBookClubsByEmailAsync(string email);
+        //Task<IEnumerable<BookClub>> GetBookClubsByEmailAsync(string email);
     }
 }
