@@ -9,31 +9,37 @@ namespace BookClubApp.Business.Services
     public class BookClubService : IBookClubService
     {
         private readonly IBookClubRepository _bookClubRepository;
-        //private readonly IMapper _mapper;
-    
-        public BookClubService(IBookClubRepository bookClubRepository/*, IMapper mapper*/)
+        private readonly IMembershipRepository _membershipRepository;
+
+        public BookClubService(IBookClubRepository bookClubRepository, IMembershipRepository membershipRepository)
         {
             _bookClubRepository = bookClubRepository;
-           // _mapper = mapper;
+            _membershipRepository = membershipRepository;
         }
-
-        public async Task<BookClub> CreateBookClubAsync(BookClub bookClub)
+        public async Task<BookClub> CreateBookClubAsync(BookClub bookClub, int ownerId, int roleId)
         {
             var createdBookClub = await _bookClubRepository.CreateBookClubAsync(bookClub);
-            //return _mapper.Map<BookClub>(createdBookClub);
-            return createdBookClub;
 
+            var membership = new Membership
+            {
+                MemberId = ownerId,
+                BookClubId = createdBookClub.Id,
+                RoleId = roleId
+            };
+
+            await _membershipRepository.AddMembershipAsync(membership);
+
+            return createdBookClub;
         }
 
-        public Task DeleteBookClubAsync(int id)
+        public async Task DeleteBookClubAsync(int id)
         {
-            throw new NotImplementedException();
+            await _bookClubRepository.DeleteBookClubAsync(id);
         }
 
         public async Task<BookClub> GetBookClubByIdAsync(int id)
         {
             var returnedBookClub = await _bookClubRepository.GetBookClubByIdAsync(id);
-            //return _mapper.Map<BookClub>(returnedBookClub);
             return returnedBookClub;
         }
 
@@ -42,15 +48,21 @@ namespace BookClubApp.Business.Services
             return await _bookClubRepository.GetBookClubsAsync();
         }
 
-        public async Task<IEnumerable<BookClub>> GetBookClubsByEmailAsync(string email)
+        public async Task<Membership> JoinBookClubAsync(int bookClubId, int memberId, int roleId)
         {
-            return await _bookClubRepository.GetBookClubsByEmailAsync(email);
+            var membership = new Membership
+            {
+                BookClubId = bookClubId,
+                MemberId = memberId,
+                RoleId = roleId
+            };
+            return await _membershipRepository.AddMembershipAsync(membership);
         }
 
         public async Task<BookClub> UpdateBookClubAsync(int id, BookClub bookClub)
         {
             var updatedBookClub = await _bookClubRepository.UpdateBookClubAsync(id, bookClub);
-            return updatedBookClub;            
+            return updatedBookClub;
         }
     }
 }

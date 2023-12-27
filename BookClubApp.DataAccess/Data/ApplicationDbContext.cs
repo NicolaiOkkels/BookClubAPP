@@ -15,11 +15,15 @@ namespace BookClubApp.DataAccess.Data
         public DbSet<Role> Roles { get; set; }
         public DbSet<Rating> Ratings { get; set; }
         public DbSet<Message> Messages { get; set; }
+        public DbSet<Poll> Polls { get; set; }
+        public DbSet<Vote> Votes { get; set; }
+        public DbSet<PollBook> PollBook { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Membership>().HasKey(m => new { m.MemberId, m.BookClubId, m.RoleId });
             modelBuilder.Entity<Rating>().HasKey(r => new { r.MemberId, r.BookId });
+            modelBuilder.Entity<PollBook>().HasKey(pb => new { pb.PollId, pb.BookId });
 
             // Dummy data
             modelBuilder.Entity<Book>().HasData(
@@ -45,11 +49,17 @@ namespace BookClubApp.DataAccess.Data
             );
 
             modelBuilder.Entity<BookClub>().HasData(
-              new { Id = 1, Name = "Book Club 1", Description = "Description of Book Club 1", Type = ClubType.Online.ToString(), LibrariesId = 1, Genre = Genres.Fiction.ToString(), IsOpen = true, MemberId = 2},
-            new { Id = 2, Name = "Book Club 2", Description = "Description of Book Club 2", Type = ClubType.Local.ToString(), LibrariesId = 2, Genre = Genres.NonFiction.ToString(), IsOpen = false, MemberId = 2}
+              new { Id = 1, Name = "Book Club 1", Description = "Description of Book Club 1", Type = ClubType.Online.ToString(), LibrariesId = 1, Genre = Genres.Fiction.ToString(), IsOpen = true, MemberId = 2 },
+            new { Id = 2, Name = "Book Club 2", Description = "Description of Book Club 2", Type = ClubType.Local.ToString(), LibrariesId = 2, Genre = Genres.NonFiction.ToString(), IsOpen = false, MemberId = 2 }
 );
 
-
+            modelBuilder.Entity<PollBook>().HasData(
+                new { PollId = 1, BookId = 14 },
+                new { PollId = 1, BookId = 15 }
+            );
+            modelBuilder.Entity<Poll>().HasData(
+                new { Id = 1, Name = "Poll 1", BookClubId = 2053  }
+            );
 
             modelBuilder.Entity<Membership>().HasData(
                 new { MemberId = 1, RoleId = 1, BookClubId = 1 },

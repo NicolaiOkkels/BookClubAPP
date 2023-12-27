@@ -1,6 +1,5 @@
 using BookClubApp.Business.Services;
 using BookClubApp.DataAccess.Entities;
-using Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
@@ -14,10 +13,14 @@ namespace BookClubApp.Business.Controllers
     public class BookClubController : ControllerBase
     {
         private readonly IBookClubService _bookClubService;
+        private readonly IRoleService _roleService;
+        private readonly IMembershipService _membershipService;
 
-        public BookClubController(IBookClubService bookClubService)
+        public BookClubController(IBookClubService bookClubService, IRoleService roleService, IMembershipService membershipService)
         {
             _bookClubService = bookClubService;
+            _roleService = roleService;
+            _membershipService = membershipService;
         }
 
         [HttpGet("getclubs")]
@@ -27,34 +30,31 @@ namespace BookClubApp.Business.Controllers
             return Ok(bookClubs);
         }
 
-        [HttpGet("mybookclubs")]
-        public async Task<IActionResult> GetBookClubsByEmail(string email)
-        {
-            Console.WriteLine(email);
-            if (string.IsNullOrEmpty(email))
-            {
-                return BadRequest("Email is required");
-            }
-
-            var bookClubs = await _bookClubService.GetBookClubsByEmailAsync(email);
-            Console.WriteLine(bookClubs.ToString());
-            return Ok(bookClubs);
-        }
-
-
         [HttpGet("getclub/{id}")]
         public async Task<IActionResult> GetBookClubById(int id)
         {
             var bookClub = await _bookClubService.GetBookClubByIdAsync(id);
             return Ok(bookClub);
         }
-        
+
         [HttpPost("createclub")]
         public async Task<IActionResult> CreateBookClub(BookClub bookClub)
         {
-            var createdBookClub = await _bookClubService.CreateBookClubAsync(bookClub);
-            return CreatedAtAction(nameof(GetBookClubById), new {id = createdBookClub.Id}, createdBookClub);
+            var memberId = bookClub.MemberId;
+            if (memberId == null)
+            {
+                return BadRequest("Member not found");
+            }
+            var roleId = await _roleService.GetRoleIdByNameAsync("Owner");
+            if (roleId == null)
+            {
+                return BadRequest("Role not found");
+            }
+            var createdBookClub = await _bookClubService.CreateBookClubAsync(bookClub, memberId.Value, roleId.Value);
+            return CreatedAtAction(nameof(GetBookClubById), new { id = createdBookClub.Id }, createdBookClub);
         }
+
+
 
         [HttpPut("updateclub/{id}")]
         public async Task<IActionResult> UpdateBookClub(int id, BookClub bookClub)
@@ -64,13 +64,13 @@ namespace BookClubApp.Business.Controllers
         }
 
         [HttpGet("bookclubs/sorted")]
-        public async Task<IActionResult> GetSortedBookClubs(string sortBy = "genre", bool isOpen = true, string? genre = null, string? type = null)
+        public async Task<IActionResult> GetSortedBookClubs(string sortBy = "genre", string? genre = null, string? type = null)
         {
             var bookClubs = await _bookClubService.GetBookClubsAsync();
 
             Console.WriteLine("book club:" + bookClubs.Count());
 
-            var filteredBookClubs = bookClubs.Where(bc => bc.IsOpen == isOpen);
+            var filteredBookClubs = bookClubs;
 
             if (!string.IsNullOrEmpty(genre))
             {
@@ -101,5 +101,20 @@ namespace BookClubApp.Business.Controllers
             Console.WriteLine(sortedBookClubs);
             return Ok(sortedBookClubs);
         }
+
+        [HttpDelete("deleteclub/{id}")]
+        public async Task<IActionResult> DeleteBookClub(int id)
+        {
+            try
+            {
+                await _bookClubService.DeleteBookClubAsync(id);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
     }
 }

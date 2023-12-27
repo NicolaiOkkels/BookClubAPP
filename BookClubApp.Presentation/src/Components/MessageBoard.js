@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import useAuthApi from "../hooks/useAuthApi";
 import { useAuth0 } from "@auth0/auth0-react";
 import { Card, CardContent, Typography } from "@material-ui/core";
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function MessageBoard({ bookClubId }) {
   const [messages, setMessages] = useState([]);
@@ -49,13 +50,23 @@ function MessageBoard({ bookClubId }) {
 
   return (
     <div>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className="input-group mb-3">
         <input
           type="text"
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
+          className="form-control"
+          placeholder="Enter your message"
+          aria-label="Recipient's username"
+          aria-describedby="button-addon2"
         />
-        <button type="submit">Send</button>
+        <button
+          className="btn btn-outline-secondary"
+          type="submit"
+          id="button-addon2"
+        >
+          Send
+        </button>
       </form>
       {messages.map((message) => (
         <Card key={message.id}>

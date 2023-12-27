@@ -6,9 +6,10 @@ namespace BookClubApp.Business.Services
     {
         Task<IEnumerable<BookClub>> GetBookClubsAsync();
         Task<BookClub> GetBookClubByIdAsync(int id);
-        Task<BookClub> CreateBookClubAsync(BookClub bookClub);
+        Task<BookClub> CreateBookClubAsync(BookClub bookClub, int ownerId, int roleId);
         Task<BookClub> UpdateBookClubAsync(int id, BookClub bookClub);
         Task DeleteBookClubAsync(int id);
-        Task<IEnumerable<BookClub>> GetBookClubsByEmailAsync(string email);
+        //Task<IEnumerable<BookClub>> GetBookClubsByEmailAsync(string email);
+        Task<Membership> JoinBookClubAsync(int bookClubId, int memberId, int roleId);
     }
 }

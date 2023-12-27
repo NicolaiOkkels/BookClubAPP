@@ -4,6 +4,7 @@ using BookClubApp.DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookClubApp.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231227002700_Added_PollBook_entity")]
+    partial class Added_PollBook_entity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -52,7 +55,7 @@ namespace BookClubApp.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Books", (string)null);
+                    b.ToTable("Books");
 
                     b.HasData(
                         new
@@ -110,7 +113,7 @@ namespace BookClubApp.DataAccess.Migrations
 
                     b.HasIndex("MemberId");
 
-                    b.ToTable("BookClubs", (string)null);
+                    b.ToTable("BookClubs");
 
                     b.HasData(
                         new
@@ -168,7 +171,7 @@ namespace BookClubApp.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Libraries", (string)null);
+                    b.ToTable("Libraries");
 
                     b.HasData(
                         new
@@ -216,7 +219,7 @@ namespace BookClubApp.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Members", (string)null);
+                    b.ToTable("Members");
 
                     b.HasData(
                         new
@@ -252,7 +255,7 @@ namespace BookClubApp.DataAccess.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("Memberships", (string)null);
+                    b.ToTable("Memberships");
 
                     b.HasData(
                         new
@@ -293,7 +296,7 @@ namespace BookClubApp.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Messages", (string)null);
+                    b.ToTable("Messages");
                 });
 
             modelBuilder.Entity("BookClubApp.DataAccess.Entities.Poll", b =>
@@ -311,7 +314,7 @@ namespace BookClubApp.DataAccess.Migrations
 
                     b.HasIndex("BookClubId");
 
-                    b.ToTable("Polls", (string)null);
+                    b.ToTable("Polls");
                 });
 
             modelBuilder.Entity("BookClubApp.DataAccess.Entities.PollBook", b =>
@@ -326,7 +329,7 @@ namespace BookClubApp.DataAccess.Migrations
 
                     b.HasIndex("BookId");
 
-                    b.ToTable("PollBook", (string)null);
+                    b.ToTable("PollBook");
                 });
 
             modelBuilder.Entity("BookClubApp.DataAccess.Entities.Rating", b =>
@@ -344,7 +347,7 @@ namespace BookClubApp.DataAccess.Migrations
 
                     b.HasIndex("BookId");
 
-                    b.ToTable("Ratings", (string)null);
+                    b.ToTable("Ratings");
 
                     b.HasData(
                         new
@@ -375,7 +378,7 @@ namespace BookClubApp.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Roles", (string)null);
+                    b.ToTable("Roles");
 
                     b.HasData(
                         new
@@ -410,7 +413,7 @@ namespace BookClubApp.DataAccess.Migrations
 
                     b.HasIndex("PollId");
 
-                    b.ToTable("Votes", (string)null);
+                    b.ToTable("Votes");
                 });
 
             modelBuilder.Entity("BookClubApp.DataAccess.Entities.BookClub", b =>

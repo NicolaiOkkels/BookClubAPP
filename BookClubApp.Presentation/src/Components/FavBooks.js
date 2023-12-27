@@ -5,9 +5,9 @@ import { Card, Button } from 'react-bootstrap';
 import { Score } from '../Enums/Score';
 import { useAuth0 } from "@auth0/auth0-react";
 
-const App = () => {
+const FavBooks = ({ onSelectBook, selectedBooks = [], showAddToPoll = false, isPollModalOpen }) => {
   const [books, setBooks] = useState([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+ const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedBookIndex, setSelectedBookIndex] = useState(null);
   const api = useAuthApi();
   const { user } = useAuth0();
@@ -28,13 +28,11 @@ const App = () => {
     Modal.setAppElement("#root");
   }, [fetchBooks]);
 
-
   const saveRating = async () => {
     const book = books[selectedBookIndex];
     const memberResponse = await api.get(`/Member/getmemberbyemail?email=${user.email}`);
     const member = memberResponse.data;
     const score = Number(book.score);
-    console.log("username is: ", member.name);
 
     if (isNaN(score) || score < 1 || score > 5) {
       console.log('Invalid score. Score must be a number between 1 and 5.');
@@ -82,9 +80,10 @@ const App = () => {
                 <Card.Title>{book.title}</Card.Title>
                 <Card.Text>{book.author}</Card.Text>
                 <Card.Text>Rating: {book.rating}</Card.Text>
-
-                <Button variant="primary" onClick={() => openModal(index)}>Add Rating</Button>
-                <Button variant="danger" onClick={() => deleteBook(book.id)}>Delete Book</Button>
+                {!isPollModalOpen && <Button variant="primary" onClick={() => openModal(index)}>Add Rating</Button>}
+  {!isPollModalOpen && <Button variant="danger" onClick={() => deleteBook(book.id)}>Delete Book</Button>}
+                {showAddToPoll && !selectedBooks.includes(book) && <Button variant="success" onClick={() => 
+                  onSelectBook(book)}>Add to Poll</Button>}
               </Card.Body>
             </Card>
           </div>
@@ -108,4 +107,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default FavBooks;

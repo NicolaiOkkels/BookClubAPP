@@ -1,11 +1,12 @@
-using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace BookClubApp.DataAccess.Entities
 {
     public class Role
     {
         public int Id { get; set; }
-        public required string Name { get; set; }
-        public virtual ICollection<Membership> Memberships { get; set; }
+
+        [Required]
+        public string? Name { get; set; }
     }
 }
