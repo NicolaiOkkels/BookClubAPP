@@ -23,7 +23,7 @@ const SelectedClub = ({ bookClubId }) => {
     } catch (error) {
       console.error(error);
     }
-  }, []); 
+  }, [api]); 
 
   const addPoll = useCallback(async (poll) => {
     try {
