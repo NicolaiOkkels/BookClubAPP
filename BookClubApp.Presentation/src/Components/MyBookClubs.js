@@ -5,6 +5,7 @@ import { Genre } from "../Enums/Genre";
 import { ClubType } from "../Enums/ClubType";
 import { Formik, Field, Form } from "formik";
 import Modal from "react-modal";
+import { useNavigate } from "react-router-dom";
 
 const MyBookClubs = () => {
   const [myBookClubs, setMyBookClubs] = useState([]);
@@ -13,12 +14,14 @@ const MyBookClubs = () => {
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [currentClub, setCurrentClub] = useState({});
   const [libraries, setLibraries] = useState([]);
+  const navigate = useNavigate();
 
   const fetchMyBookClubs = useCallback(async () => {
     if (!isAuthenticated || !user) return;
     try {
       const membershipsResult = await api.get(
-        `/Membership/mymemberships?email=${user.email}`);
+        `/Membership/mymemberships?email=${user.email}`
+      );
       const memberships = membershipsResult.data;
       console.log("my memberships: ", memberships);
       const combinedData = memberships
@@ -27,7 +30,9 @@ const MyBookClubs = () => {
           if (bookClub) {
             return {
               ...bookClub,
-              role: membership.role,};}
+              role: membership.role,
+            };
+          }
           return null;
         })
         .filter((bookClub) => bookClub !== null);
@@ -36,6 +41,10 @@ const MyBookClubs = () => {
       console.error("Error fetching my bookclubs and memberships", error);
     }
   }, [api, isAuthenticated, user, setMyBookClubs]);
+
+  const enterClub = (club) => {
+    navigate("/SelectedClub", { state: { selectedClub: club } });
+  };
 
   const ListLibraries = useCallback(async () => {
     const result = await api.get("/Library/getlibraries");
@@ -72,14 +81,16 @@ const MyBookClubs = () => {
   };
   async function leaveClub(bookclub) {
     try {
-      const memberIdResponse = await api.get(`/Member/getmemberid?email=${user?.email}`);
+      const memberIdResponse = await api.get(
+        `/Member/getmemberid?email=${user?.email}`
+      );
       console.log("memberIdResponse: ", memberIdResponse);
       const memberId = memberIdResponse.data;
-  
+
       if (!memberId) {
         throw new Error("Member ID not found");
       }
-  
+
       await api.post(`/Membership/leaveclub/${bookclub.id}/${memberId}`);
       alert("Left club successfully");
       fetchMyBookClubs();
@@ -220,45 +231,57 @@ const MyBookClubs = () => {
                     <strong>Role:</strong>{" "}
                     {bookclub.role ? bookclub.role.name : "N/A"}
                   </p>
-                  <button
-                    className="btn btn-primary"
-                    style={{
-                      display:
-                        bookclub.role && bookclub.role.name === "Owner"
-                          ? "block"
-                          : "none",
-                    }}
-                    onClick={() => {
-                      setCurrentClub(bookclub);
-                      setIsUpdateModalOpen(true);
-                    }}
+                  <div
+                    className="btn-group"
+                    role="group"
+                    aria-label="Club actions"
                   >
-                    Update
-                  </button>
-                  <button
-                    className="btn btn-danger"
-                    style={{
-                      display:
-                        bookclub.role && bookclub.role.name === "Owner"
-                          ? "block"
-                          : "none",
-                    }}
-                    onClick={() => deleteBookClub(bookclub.id)}
-                  >
-                    Delete
-                  </button>{" "}
-                  <button
-                    className="btn btn-warning"
-                    style={{
-                      display:
-                        bookclub.role && bookclub.role.name === "Member"
-                          ? "block"
-                          : "none",
-                    }}
-                    onClick={() => leaveClub(bookclub)}
-                  >
-                    Leave Club
-                  </button>
+                    <button
+                      className="btn btn-primary"
+                      style={{
+                        display:
+                          bookclub.role && bookclub.role.name === "Owner"
+                            ? "block"
+                            : "none",
+                      }}
+                      onClick={() => {
+                        setCurrentClub(bookclub);
+                        setIsUpdateModalOpen(true);
+                      }}
+                    >
+                      Update
+                    </button>
+                    <button
+                      className="btn btn-danger"
+                      style={{
+                        display:
+                          bookclub.role && bookclub.role.name === "Owner"
+                            ? "block"
+                            : "none",
+                      }}
+                      onClick={() => deleteBookClub(bookclub.id)}
+                    >
+                      Delete
+                    </button>
+                    <button
+                      className="btn btn-warning"
+                      style={{
+                        display:
+                          bookclub.role && bookclub.role.name === "Member"
+                            ? "block"
+                            : "none",
+                      }}
+                      onClick={() => leaveClub(bookclub)}
+                    >
+                      Leave Club
+                    </button>
+                    <button
+                      className="btn btn-success"
+                      onClick={() => enterClub(bookclub)}
+                    >
+                      Enter Club
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>

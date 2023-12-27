@@ -4,6 +4,7 @@ using BookClubApp.DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookClubApp.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231227002700_Added_PollBook_entity")]
+    partial class Added_PollBook_entity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -312,13 +315,6 @@ namespace BookClubApp.DataAccess.Migrations
                     b.HasIndex("BookClubId");
 
                     b.ToTable("Polls");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            BookClubId = 2053
-                        });
                 });
 
             modelBuilder.Entity("BookClubApp.DataAccess.Entities.PollBook", b =>
@@ -334,18 +330,6 @@ namespace BookClubApp.DataAccess.Migrations
                     b.HasIndex("BookId");
 
                     b.ToTable("PollBook");
-
-                    b.HasData(
-                        new
-                        {
-                            PollId = 1,
-                            BookId = 14
-                        },
-                        new
-                        {
-                            PollId = 1,
-                            BookId = 15
-                        });
                 });
 
             modelBuilder.Entity("BookClubApp.DataAccess.Entities.Rating", b =>

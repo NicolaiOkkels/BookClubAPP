@@ -40,7 +40,6 @@ namespace BookClubApp.Business.Services
         public async Task<BookClub> GetBookClubByIdAsync(int id)
         {
             var returnedBookClub = await _bookClubRepository.GetBookClubByIdAsync(id);
-            //return _mapper.Map<BookClub>(returnedBookClub);
             return returnedBookClub;
         }
 
@@ -48,11 +47,6 @@ namespace BookClubApp.Business.Services
         {
             return await _bookClubRepository.GetBookClubsAsync();
         }
-
-        // public async Task<IEnumerable<BookClub>> GetBookClubsByEmailAsync(string email)
-        // {
-        //     return await _bookClubRepository.GetBookClubsByEmailAsync(email);
-        // }
 
         public async Task<Membership> JoinBookClubAsync(int bookClubId, int memberId, int roleId)
         {
