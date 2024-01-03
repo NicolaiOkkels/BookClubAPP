@@ -13,9 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       AZURE_WEBAPP_BACKEND_PACKAGE_PATH: "./publish"
-      AZURE_WEBAPP_FRONTEND_PACKAGE_PATH: "./BookClubApp.Presentation/build"
       AZURE_WEBAPP_BACKEND_NAME: bookclub-backend
-      AZURE_WEBAPP_FRONTEND_NAME: mybookclub
 
     services:
       mssql:
@@ -36,6 +34,9 @@ jobs:
 
       - name: Restore dependencies
         run: dotnet restore ./BookClubAPP.sln
+
+      - name: List packages
+        run: dotnet list package
 
       - name: Build
         run: dotnet build ./BookClubAPP.sln --no-restore
@@ -82,7 +83,7 @@ jobs:
         run: npm run build
         working-directory: BookClubApp.Presentation
         
-      - name: Publish
+      - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
           app-name: mybookclub
