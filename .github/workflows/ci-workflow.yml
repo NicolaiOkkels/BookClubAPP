@@ -47,6 +47,11 @@ jobs:
       - name: Install EF Core Tools
         run: dotnet tool install --global dotnet-ef --version 7.0.14
 
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }} 
+
       - name: Add Firewall Rule
         run: |
           # Get IP Adresse
