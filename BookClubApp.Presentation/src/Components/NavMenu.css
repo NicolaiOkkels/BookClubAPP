@@ -1,4 +1,8 @@
-﻿a.navbar-brand {
+﻿body {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+a.navbar-brand {
   white-space: normal;
   text-align: center;
   word-break: break-all;
@@ -20,5 +24,50 @@ html {
 .logo {
   height: 55px;
   width: 55px;
-  margin-left: 20px;
+  margin-left: -30px;
+}
+
+.profile {
+  width: 50px; /* Adjust the size as needed */
+  height: 50px; /* Adjust the size as needed */
+  border-radius: 50%; /* Circular shape */
+  object-fit: cover; /* Ensure the image covers the area without stretching */
+  border: 2px solid #fff; /* Optional: Adds a border around the image */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Optional: Adds a subtle shadow for depth */
+}
+
+.logout {
+  margin-right: 3rem;
+}
+
+.button-logo-style {
+  background-color: #ffffff;
+  color: rgb(0, 0, 0); /* White text color */
+  border: none; /* No border */
+  border-radius: 4px; /* Slight rounding of corners to match the logo's style */
+  padding: 10px 20px; /* Padding to make the button taller and wider */
+  text-transform: uppercase; 
+  cursor: pointer; 
+  transition: background-color 0.3s ease; 
+}
+
+.button-logo-style:hover {
+  color: #c7c7c7; /* Darker shade of orange for the hover state */
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 768px) {
+  .navbar-nav {
+      flex-direction: column;
+  }
+  
+  .nav-item {
+      padding: 5px 15px;
+  }
+  
+
+  .button-logo-style {
+      padding: 8px 16px;
+      font-size: 0.9em; 
+  }
 }

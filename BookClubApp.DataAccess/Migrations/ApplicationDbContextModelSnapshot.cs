@@ -52,18 +52,7 @@ namespace BookClubApp.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Books", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Author = "Joanne K. Rowling",
-                            CoverImage = "https://moreinfo.addi.dk/2.11/more_info_get.php?lokalid=137198843&attachment_type=forside_stor&bibliotek=870970&source_id=870970&key=fb7fb908d05c9c08b16d",
-                            MaterialType = "bøger",
-                            Pid = "870970-basis:137198843",
-                            Title = "Harry Potter og De Vises Sten"
-                        });
+                    b.ToTable("Books");
                 });
 
             modelBuilder.Entity("BookClubApp.DataAccess.Entities.BookClub", b =>
@@ -110,31 +99,7 @@ namespace BookClubApp.DataAccess.Migrations
 
                     b.HasIndex("MemberId");
 
-                    b.ToTable("BookClubs", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Description = "Description of Book Club 1",
-                            Genre = "Fiction",
-                            IsOpen = true,
-                            LibrariesId = 1,
-                            MemberId = 2,
-                            Name = "Book Club 1",
-                            Type = "Online"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Description = "Description of Book Club 2",
-                            Genre = "NonFiction",
-                            IsOpen = false,
-                            LibrariesId = 2,
-                            MemberId = 2,
-                            Name = "Book Club 2",
-                            Type = "Local"
-                        });
+                    b.ToTable("BookClubs");
                 });
 
             modelBuilder.Entity("BookClubApp.DataAccess.Entities.Libraries", b =>
@@ -168,31 +133,7 @@ namespace BookClubApp.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Libraries", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Email = "kb@kb.dk",
-                            LibrarieAddress = "Christians Brygge 8",
-                            LibrarieCity = "København K",
-                            LibrarieName = "Poster vedr. sproglige minoriteter Det Kgl. Bibliotek",
-                            LibrarieNumber = 700300,
-                            LibrarieZipCode = 1219,
-                            PhoneNumber = "33474747"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Email = "dcb@dcbib.dk",
-                            LibrarieAddress = "Norderstrasse 59, 24939 Flensburg",
-                            LibrarieCity = "Padborg",
-                            LibrarieName = "Dansk Centralbibliotek for Sydslesvig e.V.",
-                            LibrarieNumber = 700400,
-                            LibrarieZipCode = 6330,
-                            PhoneNumber = "+4946186970"
-                        });
+                    b.ToTable("Libraries");
                 });
 
             modelBuilder.Entity("BookClubApp.DataAccess.Entities.Member", b =>
@@ -216,23 +157,7 @@ namespace BookClubApp.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Members", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            BirthDate = new DateTime(1980, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "john.doe@example.com",
-                            Name = "John Doe"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            BirthDate = new DateTime(1990, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "jane.smith@example.com",
-                            Name = "Jane Smith"
-                        });
+                    b.ToTable("Members");
                 });
 
             modelBuilder.Entity("BookClubApp.DataAccess.Entities.Membership", b =>
@@ -252,21 +177,7 @@ namespace BookClubApp.DataAccess.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("Memberships", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            MemberId = 1,
-                            BookClubId = 1,
-                            RoleId = 1
-                        },
-                        new
-                        {
-                            MemberId = 2,
-                            BookClubId = 1,
-                            RoleId = 2
-                        });
+                    b.ToTable("Memberships");
                 });
 
             modelBuilder.Entity("BookClubApp.DataAccess.Entities.Message", b =>
@@ -293,7 +204,7 @@ namespace BookClubApp.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Messages", (string)null);
+                    b.ToTable("Messages");
                 });
 
             modelBuilder.Entity("BookClubApp.DataAccess.Entities.Poll", b =>
@@ -311,7 +222,7 @@ namespace BookClubApp.DataAccess.Migrations
 
                     b.HasIndex("BookClubId");
 
-                    b.ToTable("Polls", (string)null);
+                    b.ToTable("Polls");
                 });
 
             modelBuilder.Entity("BookClubApp.DataAccess.Entities.PollBook", b =>
@@ -326,7 +237,7 @@ namespace BookClubApp.DataAccess.Migrations
 
                     b.HasIndex("BookId");
 
-                    b.ToTable("PollBook", (string)null);
+                    b.ToTable("PollBook");
                 });
 
             modelBuilder.Entity("BookClubApp.DataAccess.Entities.Rating", b =>
@@ -344,21 +255,7 @@ namespace BookClubApp.DataAccess.Migrations
 
                     b.HasIndex("BookId");
 
-                    b.ToTable("Ratings", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            MemberId = 1,
-                            BookId = 1,
-                            Score = 5
-                        },
-                        new
-                        {
-                            MemberId = 1,
-                            BookId = 2,
-                            Score = 4
-                        });
+                    b.ToTable("Ratings");
                 });
 
             modelBuilder.Entity("BookClubApp.DataAccess.Entities.Role", b =>
@@ -375,19 +272,7 @@ namespace BookClubApp.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Roles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "Member"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "Owner"
-                        });
+                    b.ToTable("Roles");
                 });
 
             modelBuilder.Entity("BookClubApp.DataAccess.Entities.Vote", b =>
@@ -410,7 +295,7 @@ namespace BookClubApp.DataAccess.Migrations
 
                     b.HasIndex("PollId");
 
-                    b.ToTable("Votes", (string)null);
+                    b.ToTable("Votes");
                 });
 
             modelBuilder.Entity("BookClubApp.DataAccess.Entities.BookClub", b =>

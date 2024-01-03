@@ -20,7 +20,6 @@ const Profile = () => {
               email: user.email,
               name: user.name,
               birthdate: user.birthdate ? user.birthdate : '2000-01-01',
-             // memberships: null
             };
             console.log('User data:', userData);
             api.post('/Member/addmember', userData, { headers: { 'Content-Type': 'application/json' } })
@@ -36,7 +35,6 @@ const Profile = () => {
     isAuthenticated && (
       <article>
         {user?.picture && <img src={user.picture} alt={user?.name} className="profile-pic"/>}
-        <h4>{user?.name}</h4>
       </article>
     )
   )
