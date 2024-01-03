@@ -87,6 +87,12 @@ jobs:
         with:
           node-version: "20.x"
 
+      - name: Cache node_modules
+        uses: actions/cache@v2
+        with:
+          path: ./BookClubApp.Presentation/node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }} 
+
       - name: Install dependencies
         run: npm ci --legacy-peer-deps
         working-directory: BookClubApp.Presentation
