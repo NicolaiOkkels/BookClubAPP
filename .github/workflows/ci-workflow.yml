@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       AZURE_WEBAPP_BACKEND_PACKAGE_PATH: "./publish"
-      AZURE_WEBAPP_FRONTEND_PACKAGE_PATH: "BookClubApp.Presentation/build"
+      AZURE_WEBAPP_FRONTEND_PACKAGE_PATH: "./BookClubApp.Presentation/build"
       AZURE_WEBAPP_BACKEND_NAME: bookclub-backend
       AZURE_WEBAPP_FRONTEND_NAME: mybookclub
 
@@ -82,7 +82,7 @@ jobs:
         run: npm run build
         working-directory: BookClubApp.Presentation
         
-      - name: Publish Presentation Layer
+      - name: Publish
         uses: azure/webapps-deploy@v2
         with:
           app-name: ${{ env.AZURE_WEBAPP_FRONTEND_NAME }}
