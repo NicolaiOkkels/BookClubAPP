@@ -36,6 +36,9 @@ jobs:
       - name: Build
         run: dotnet build BookClubApp.Business/BookClubApp.Business.csproj --no-restore
 
+      - name: Publish
+        run: dotnet publish BookClubApp.Business/BookClubApp.Business.csproj --configuration Release --no-restore --output ./publish   
+
       - name: Run MSSQL Server Docker Container
         run: docker run --rm -d -p 1433:1433 -e SA_PASSWORD=$DB_SA_PASSWORD -e ACCEPT_EULA=Y mcr.microsoft.com/mssql/server:2022-latest
 
@@ -99,3 +102,31 @@ jobs:
       - name: Build Presentation Layer
         run: npm run build
         working-directory: BookClubApp.Presentation
+
+  azure-deploy-backend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Deploy Backend (Business and Data Layer) to Azure App Service
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: 'bookclub-backend'
+          package: './publish'
+
+  azure-deploy-frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Deploy Frontend to Azure App Service
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: 'reactjs-frontend'
+          package: 'BookClubApp.Presentation/build'

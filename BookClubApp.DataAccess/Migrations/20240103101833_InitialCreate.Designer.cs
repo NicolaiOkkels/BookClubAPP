@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookClubApp.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231218225023_UpdateRatingEntity")]
-    partial class UpdateRatingEntity
+    [Migration("20240103101833_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -49,9 +49,6 @@ namespace BookClubApp.DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("Score")
-                        .HasColumnType("int");
-
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -59,18 +56,6 @@ namespace BookClubApp.DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Books");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Author = "Joanne K. Rowling",
-                            CoverImage = "https://moreinfo.addi.dk/2.11/more_info_get.php?lokalid=137198843&attachment_type=forside_stor&bibliotek=870970&source_id=870970&key=fb7fb908d05c9c08b16d",
-                            MaterialType = "bøger",
-                            Pid = "870970-basis:137198843",
-                            Score = 5,
-                            Title = "Harry Potter og De Vises Sten"
-                        });
                 });
 
             modelBuilder.Entity("BookClubApp.DataAccess.Entities.BookClub", b =>
@@ -98,6 +83,9 @@ namespace BookClubApp.DataAccess.Migrations
                     b.Property<int?>("LibrariesId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("MemberId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -112,29 +100,9 @@ namespace BookClubApp.DataAccess.Migrations
 
                     b.HasIndex("LibrariesId");
 
-                    b.ToTable("BookClubs");
+                    b.HasIndex("MemberId");
 
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Description = "Description of Book Club 1",
-                            Genre = "Fiction",
-                            IsOpen = true,
-                            LibrariesId = 1,
-                            Name = "Book Club 1",
-                            Type = "Online"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Description = "Description of Book Club 2",
-                            Genre = "NonFiction",
-                            IsOpen = false,
-                            LibrariesId = 2,
-                            Name = "Book Club 2",
-                            Type = "Local"
-                        });
+                    b.ToTable("BookClubs");
                 });
 
             modelBuilder.Entity("BookClubApp.DataAccess.Entities.Libraries", b =>
@@ -169,30 +137,6 @@ namespace BookClubApp.DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Libraries");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Email = "kb@kb.dk",
-                            LibrarieAddress = "Christians Brygge 8",
-                            LibrarieCity = "København K",
-                            LibrarieName = "Poster vedr. sproglige minoriteter Det Kgl. Bibliotek",
-                            LibrarieNumber = 700300,
-                            LibrarieZipCode = 1219,
-                            PhoneNumber = "33474747"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Email = "dcb@dcbib.dk",
-                            LibrarieAddress = "Norderstrasse 59, 24939 Flensburg",
-                            LibrarieCity = "Padborg",
-                            LibrarieName = "Dansk Centralbibliotek for Sydslesvig e.V.",
-                            LibrarieNumber = 700400,
-                            LibrarieZipCode = 6330,
-                            PhoneNumber = "+4946186970"
-                        });
                 });
 
             modelBuilder.Entity("BookClubApp.DataAccess.Entities.Member", b =>
@@ -217,22 +161,6 @@ namespace BookClubApp.DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Members");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            BirthDate = new DateTime(1980, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "john.doe@example.com",
-                            Name = "John Doe"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            BirthDate = new DateTime(1990, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "jane.smith@example.com",
-                            Name = "Jane Smith"
-                        });
                 });
 
             modelBuilder.Entity("BookClubApp.DataAccess.Entities.Membership", b =>
@@ -253,20 +181,6 @@ namespace BookClubApp.DataAccess.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("Memberships");
-
-                    b.HasData(
-                        new
-                        {
-                            MemberId = 1,
-                            BookClubId = 1,
-                            RoleId = 1
-                        },
-                        new
-                        {
-                            MemberId = 2,
-                            BookClubId = 1,
-                            RoleId = 2
-                        });
                 });
 
             modelBuilder.Entity("BookClubApp.DataAccess.Entities.Rating", b =>
@@ -285,20 +199,6 @@ namespace BookClubApp.DataAccess.Migrations
                     b.HasIndex("BookId");
 
                     b.ToTable("Ratings");
-
-                    b.HasData(
-                        new
-                        {
-                            MemberId = 1,
-                            BookId = 1,
-                            Score = 5
-                        },
-                        new
-                        {
-                            MemberId = 1,
-                            BookId = 2,
-                            Score = 4
-                        });
                 });
 
             modelBuilder.Entity("BookClubApp.DataAccess.Entities.Role", b =>
@@ -316,18 +216,6 @@ namespace BookClubApp.DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Roles");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "Member"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "Owner"
-                        });
                 });
 
             modelBuilder.Entity("BookClubApp.DataAccess.Entities.BookClub", b =>
@@ -340,9 +228,15 @@ namespace BookClubApp.DataAccess.Migrations
                         .WithMany()
                         .HasForeignKey("LibrariesId");
 
+                    b.HasOne("BookClubApp.DataAccess.Entities.Member", "Member")
+                        .WithMany()
+                        .HasForeignKey("MemberId");
+
                     b.Navigation("Book");
 
                     b.Navigation("Libraries");
+
+                    b.Navigation("Member");
                 });
 
             modelBuilder.Entity("BookClubApp.DataAccess.Entities.Membership", b =>
