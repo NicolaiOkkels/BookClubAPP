@@ -4,9 +4,10 @@ import { useMemo, useCallback } from 'react';
 
 const useAuthApi = () => {
   const { getAccessTokenSilently } = useAuth0();
+  const apiUrl = process.env.REACT_APP_API_URL;
 
   const apiClient = useMemo(() => axios.create({
-    baseURL: "http://localhost:5179",
+    baseURL: apiUrl,
   }), []);
 
   const makeRequest = useCallback(async (method, url, data = null, config = {}) => {
