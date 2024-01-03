@@ -71,7 +71,7 @@ jobs:
           node-version: "20.x"
 
       - name: Install dependencies (Presentation)
-        run: npm ci
+        run: npm ci --legacy-peer-deps
         working-directory: BookClubApp.Presentation
 
       - name: Run Tests
