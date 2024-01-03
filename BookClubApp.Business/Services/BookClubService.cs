@@ -1,4 +1,3 @@
-using AutoMapper;
 using BookClubApp.DataAccess.Entities;
 using BookClubApp.DataAccess.Repositories;
 using BookClubApp.Business.Services;

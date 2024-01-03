@@ -9,10 +9,12 @@ on:
       - main
 
 jobs:
-  build-and-test-business:
+  build-and-test-backend:
     runs-on: ubuntu-latest
     env:
-      DB_SA_PASSWORD: ${{ secrets.DB_SA_PASSWORD }}
+      AZURE_WEBAPP_BACKEND_PACKAGE_PATH: "./publish"
+      AZURE_WEBAPP_BACKEND_NAME: bookclub-backend
+
     services:
       mssql:
         image: mcr.microsoft.com/mssql/server:2022-latest
@@ -31,53 +33,50 @@ jobs:
           dotnet-version: 7.0.x
 
       - name: Restore dependencies
-        run: dotnet restore BookClubApp.Business/BookClubApp.Business.csproj
+        run: dotnet restore ./BookClubAPP.sln
+
+      - name: List packages
+        run: dotnet list package
 
       - name: Build
-        run: dotnet build BookClubApp.Business/BookClubApp.Business.csproj --no-restore
+        run: dotnet build ./BookClubAPP.sln --configuration Release --no-restore
 
-      - name: Run MSSQL Server Docker Container
-        run: docker run --rm -d -p 1433:1433 -e SA_PASSWORD=$DB_SA_PASSWORD -e ACCEPT_EULA=Y mcr.microsoft.com/mssql/server:2022-latest
-
-      - name: Setup MSSQL Server
-        run: sleep 30s
+      - name: Publish
+        run: dotnet publish ./BookClubAPP.sln -c Release -o ${{ env.AZURE_WEBAPP_BACKEND_PACKAGE_PATH }} --no-build
 
       - name: Install EF Core Tools
         run: dotnet tool install --global dotnet-ef --version 7.0.14
 
-      - name: Run migrations
-        run: dotnet ef database update --project BookClubApp.DataAccess/BookClubApp.DataAccess.csproj
-
-      - name: Restore dependencies (Test)
-        run: dotnet restore BookClubApp.Business/Tests/BookClubApp.Business.Tests/BookClubApp.Business.Tests.csproj
-
-      - name: Run unit and integration test
-        run: dotnet test BookClubApp.Business/Tests/BookClubApp.Business.Tests/BookClubApp.Business.Tests.csproj --no-restore
-
-  build-and-test-data-access:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check Out Repository
-        uses: actions/checkout@v2
-
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v2
+      - name: Azure Login
+        uses: azure/login@v1
         with:
-          dotnet-version: 7.0.x
+          creds: ${{ secrets.AZURE_CREDENTIALS }} 
 
-      - name: Restore dependencies
-        run: dotnet restore BookClubApp.DataAccess/BookClubApp.DataAccess.csproj
+      - name: Add Firewall Rule
+        run: |
+          # Get IP Adresse
+          runner_ip=$(curl https://ipinfo.io/ip)
+          echo "Runner IP: $runner_ip"
 
-      - name: Build
-        run: dotnet build BookClubApp.DataAccess/BookClubApp.DataAccess.csproj --no-restore
+          # Add the IP to the SQL firewall (using Azure CLI)
+          az sql server firewall-rule create --resource-group BookClub-Bachelor-2023 --server bookclub-sql-server --name "MigrationIP" --start-ip-address $runner_ip --end-ip-address $runner_ip
 
-      - name: Restore dependencies (Test)
-        run: dotnet restore BookClubApp.DataAccess/Tests/BookClubApp.DataAccessLayer.Tests/BookClubApp.DataAccessLayer.Tests.csproj
+      - name: Run migrations
+        run: dotnet ef database update --project BookClubApp.DataAccess/BookClubApp.DataAccess.csproj --connection "${{ secrets.AZURE_SQL_CONNECTION_STRING }}"
 
-      - name: Run test
-        run: dotnet test BookClubApp.DataAccess/Tests/BookClubApp.DataAccessLayer.Tests/BookClubApp.DataAccessLayer.Tests.csproj --no-restore
+      - name: Remove Firewall Rule
+        if: always()
+        run: |
+          az sql server firewall-rule delete --resource-group BookClub-Bachelor-2023 --server bookclub-sql-server --name "MigrationIP"
 
-  build-and-test-presentation:
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: ${{ env.AZURE_WEBAPP_BACKEND_NAME }}
+          publish-profile: ${{ secrets.AZURE_BACKEND_PUBLISH_PROFILE }}
+          package: ${{ env.AZURE_WEBAPP_BACKEND_PACKAGE_PATH }}
+          
+  build-and-test-frontend:
     runs-on: ubuntu-latest
     steps:
       - name: Check Out Repository
@@ -89,13 +88,20 @@ jobs:
           node-version: "20.x"
 
       - name: Install dependencies (Presentation)
-        run: npm ci
+        run: npm ci --legacy-peer-deps
         working-directory: BookClubApp.Presentation
 
-      - name: Run Presentation Layer Tests
+      - name: Run Tests
         run: npm test
         working-directory: BookClubApp.Presentation
 
-      - name: Build Presentation Layer
+      - name: Build
         run: npm run build
         working-directory: BookClubApp.Presentation
+        
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: mybookclub
+          publish-profile: ${{ secrets.AZURE_FRONTED_PUBLISH_PROFILE }}
+          package: ./BookClubApp.Presentation/build
