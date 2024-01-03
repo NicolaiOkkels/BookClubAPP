@@ -39,7 +39,7 @@ jobs:
         run: dotnet list package
 
       - name: Build
-        run: dotnet build ./BookClubAPP.sln --no-restore
+        run: dotnet build ./BookClubAPP.sln --configuration Release --no-restore
 
       - name: Publish
         run: dotnet publish ./BookClubAPP.sln -c Release -o ${{ env.AZURE_WEBAPP_BACKEND_PACKAGE_PATH }} --no-build
