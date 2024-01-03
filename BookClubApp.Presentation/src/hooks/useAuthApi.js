@@ -2,9 +2,10 @@ import { useAuth0 } from '@auth0/auth0-react';
 import axios from 'axios';
 import { useMemo, useCallback } from 'react';
 
+const apiUrl = process.env.REACT_APP_API_URL;
+
 const useAuthApi = () => {
   const { getAccessTokenSilently } = useAuth0();
-  const apiUrl = process.env.REACT_APP_API_URL;
 
   const apiClient = useMemo(() => axios.create({
     baseURL: apiUrl,
