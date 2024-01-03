@@ -80,14 +80,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check Out Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Use Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: "20.x"
 
-      - name: Install dependencies (Presentation)
+      - name: Install dependencies
         run: npm ci --legacy-peer-deps
         working-directory: BookClubApp.Presentation
 
@@ -104,4 +104,4 @@ jobs:
         with:
           app-name: mybookclub
           publish-profile: ${{ secrets.AZURE_FRONTED_PUBLISH_PROFILE }}
-          package: ./BookClubApp.Presentation/build
+          package: ./BookClubApp.Presentation
