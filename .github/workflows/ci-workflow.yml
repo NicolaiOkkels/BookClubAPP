@@ -106,9 +106,6 @@ jobs:
       - name: Add package.json to the Zip Archive
         run: zip -g release.zip package.json
         working-directory: ./BookClubApp.Presentation
-
-      - name: Create Zip Archive
-        run: zip -r release.zip ./BookClubApp.Presentation/build/*
       
       - name: Upload artifact for deployment
         uses: actions/upload-artifact@v2
