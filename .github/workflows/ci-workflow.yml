@@ -100,8 +100,7 @@ jobs:
         working-directory: ./BookClubApp.Presentation
 
       - name: Create Zip Archive
-        run: zip -r release.zip ./build/*
-        working-directory: ./BookClubApp.Presentation
+        run: zip -r release.zip BookClubApp.Presentation/build/*
       
       - name: Upload artifact for deployment
         uses: actions/upload-artifact@v2
