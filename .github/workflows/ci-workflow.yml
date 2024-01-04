@@ -99,6 +99,9 @@ jobs:
         run: npm run build
         working-directory: ./BookClubApp.Presentation
 
+      - name: Copy package.json to build directory
+        run: cp ./BookClubApp.Presentation/package.json ./BookClubApp.Presentation
+      
       - name: Create Zip Archive
         run: zip -r release.zip ./BookClubApp.Presentation/build/*
       
