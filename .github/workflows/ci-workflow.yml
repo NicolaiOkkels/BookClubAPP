@@ -87,12 +87,6 @@ jobs:
         with:
           node-version: "20.x"
 
-      - name: Cache node_modules
-        uses: actions/cache@v2
-        with:
-          path: ./BookClubApp.Presentation/node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }} 
-
       - name: Install dependencies
         run: npm ci --legacy-peer-deps
         working-directory: BookClubApp.Presentation
@@ -104,10 +98,27 @@ jobs:
       - name: Build
         run: npm run build
         working-directory: BookClubApp.Presentation
-        
+
+      - name: Zip Release
+        uses: TheDoctor0/zip-release@0.6.1
+        with: 
+          filename: release.zip
+          path: ./BookClubApp.Presentation/build/*
+         
+      - name: Upload artifact for deployment
+        uses: actions/upload-artifact@v2
+        with:
+          name: node-app
+          path: ./BookClubApp.Presentation
+
+      - name: Download artifact
+        uses: actions/download-artifact@v2
+        with: 
+          name: node-app
+
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
           app-name: mybookclub
           publish-profile: ${{ secrets.AZURE_FRONTED_PUBLISH_PROFILE }}
-          package: ./BookClubApp.Presentation
+          package: release.zip
