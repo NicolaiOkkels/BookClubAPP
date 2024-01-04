@@ -92,16 +92,19 @@ jobs:
         working-directory: ./BookClubApp.Presentation
 
       - name: Run Tests
-        run: npm test
+        run: npm run test --if-present
         working-directory: ./BookClubApp.Presentation
 
       - name: Build
-        run: npm run build
+        run: npm run build --if-present
+        working-directory: ./BookClubApp.Presentation
+
+      - name: Copy package.json to build directory
+        run: cp package.json ./build/
         working-directory: ./BookClubApp.Presentation
 
       - name: Create Zip Archive
-        run: zip -r release.zip ./build/*
-        working-directory: BookClubApp.Presentation
+        run: zip -r release.zip ./BookClubApp.Presentation/build/*
       
       - name: Upload artifact for deployment
         uses: actions/upload-artifact@v2
