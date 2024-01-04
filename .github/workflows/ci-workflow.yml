@@ -99,17 +99,14 @@ jobs:
         run: npm run build
         working-directory: BookClubApp.Presentation
 
-      - name: Zip Release
-        uses: TheDoctor0/zip-release@0.6.1
-        with: 
-          filename: release.zip
-          path: ./BookClubApp.Presentation/build/*
-         
+      - name: Create Zip Archive
+        run: zip -r release.zip ./BookClubApp.Presentation/build/*
+      
       - name: Upload artifact for deployment
         uses: actions/upload-artifact@v2
         with:
           name: node-app
-          path: ./BookClubApp.Presentation
+          path: release.zip
 
       - name: Download artifact
         uses: actions/download-artifact@v2
