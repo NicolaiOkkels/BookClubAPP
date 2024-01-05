@@ -23,7 +23,6 @@ const MyBookClubs = () => {
         `/Membership/mymemberships?email=${user.email}`
       );
       const memberships = membershipsResult.data;
-      console.log("my memberships: ", memberships);
       const combinedData = memberships
         .map((membership) => {
           const bookClub = membership.bookClub;

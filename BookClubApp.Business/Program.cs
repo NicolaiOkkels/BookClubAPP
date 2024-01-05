@@ -50,10 +50,11 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 // Add services to the container.
 builder.Services.AddCors(options =>
 {
+    var allowedOrigins = builder.Configuration["CorsOrigins"].Split(',');
     options.AddPolicy("AllowSpecificOrigin",
         builder =>
         {
-            builder.WithOrigins("http://localhost:3000") // Replace with your client's origin
+            builder.WithOrigins(allowedOrigins)
                    .AllowAnyHeader()
                    .AllowAnyMethod()
                    .AllowCredentials();
@@ -65,8 +66,6 @@ var app = builder.Build();
 app.UseCors("AllowSpecificOrigin");
 app.UseAuthentication();
 app.UseAuthorization();
-
-//await AutomatedMigration.MigrateAsync(scope.ServiceProvider);
 
 var scope = app.Services.CreateScope();
 
