@@ -62,14 +62,13 @@ const App = () => {
   
     try {
       const memberId = await getMemberId(user?.email);
-  
       values = {
         ...values,
         memberId: memberId,
         isOpen: true,
         librariesId: Number(values.librariesId),
       };
-  
+      console.log(values);
       await api.post(`/BookClub/createclub`, values);
   
       alert("Club Created successfully");
