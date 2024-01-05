@@ -7,6 +7,7 @@
     <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="EPPlus" Version="7.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="7.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.14" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.14">
@@ -21,6 +22,6 @@
     <PackageReference Include="xunit" Version="2.6.1" />
   </ItemGroup>
     <ItemGroup>
-    <ProjectReference Include="..\Enums\Enums.csproj"/>
+    <ProjectReference Include="..\Enums\Enums.csproj" />
   </ItemGroup>
 </Project>

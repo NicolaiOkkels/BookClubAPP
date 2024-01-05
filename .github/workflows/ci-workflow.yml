@@ -38,6 +38,12 @@ jobs:
       - name: List packages
         run: dotnet list package
 
+      - name: Test Business
+        run: dotnet test BookClubApp.Business/Tests/BookClubApp.Business.Tests/BookClubApp.Business.Tests.csproj --no-restore
+
+      - name: Test Data Access
+        run: dotnet test BookClubApp.DataAccess/Tests/BookClubApp.DataAccessLayer.Tests/BookClubApp.DataAccessLayer.Tests.csproj --no-restore
+
       - name: Build
         run: dotnet build ./BookClubAPP.sln --configuration Release --no-restore
 
@@ -99,9 +105,9 @@ jobs:
         run: npm run build --if-present
         working-directory: ./BookClubApp.Presentation
 
-      - name: Create Zip Archive with build folder, package.json, and node_modules
+      - name: Create Zip Archive with build folder, package.json
         run: |
-          zip -r release.zip build package.json node_modules
+          zip -r release.zip build package.json
         working-directory: ./BookClubApp.Presentation
       
       - name: Upload artifact for deployment
