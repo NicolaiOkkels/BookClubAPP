@@ -24,4 +24,9 @@
     <ItemGroup>
     <ProjectReference Include="..\Enums\Enums.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <None Update="publiclibraries.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 </Project>
