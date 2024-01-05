@@ -25,8 +25,7 @@ namespace BookClubApp.DataAccess.Data
             modelBuilder.Entity<Rating>().HasKey(r => new { r.MemberId, r.BookId });
             modelBuilder.Entity<PollBook>().HasKey(pb => new { pb.PollId, pb.BookId });
 
-            // Load data from Excel
-            var librariesData = ExcelDataLoader.LoadDataFromExcel("../publiclibraries.csv");
+            var librariesData = ExcelDataLoader.LoadDataFromExcel("publiclibraries.csv");
 
             // Seed the data
             modelBuilder.Entity<Libraries>().HasData(librariesData);
