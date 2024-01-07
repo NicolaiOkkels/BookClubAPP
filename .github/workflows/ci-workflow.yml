@@ -119,4 +119,4 @@ jobs:
         with:
           app-name: mybookclub
           publish-profile: ${{ secrets.AZURE_FRONTED_PUBLISH_PROFILE }}
-          package: ./BookClubApp.Presentation/build
+          package: ./BookClubApp.Presentation
