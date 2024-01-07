@@ -115,9 +115,6 @@ jobs:
         with: 
           name: node-app
 
-      - name: List of files presentation    
-        run: ls -R ./BookClubApp.Presentation
-
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
