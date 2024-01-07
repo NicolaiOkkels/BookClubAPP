@@ -105,7 +105,7 @@ jobs:
         with:
           name: node-app
           path: |
-           BookClubApp.Presentation/**/*
+           BookClubApp.Presentation/
            !BookClubApp.Presentation/node_modules/
 
       - name: Download artifact
