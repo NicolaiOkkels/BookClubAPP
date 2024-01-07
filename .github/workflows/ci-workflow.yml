@@ -100,10 +100,15 @@ jobs:
           npm run test --if-present
         working-directory: ./BookClubApp.Presentation
 
-      - name: Create a ZIP file with build and package files
+      - name: Copy files to build
         run: |
-          zip -r release.zip ./BookClubApp.Presentation/build ./BookClubApp.Presentation/package.json ./BookClubApp.Presentation/package-lock.json
-        
+          cp ./BookClubApp.Presentation/package.json ./BookClubApp.Presentation/build/
+          cp ./BookClubApp.Presentation/package-lock.json ./BookClubApp.Presentation/build/
+      
+      - name: Create a ZIP file and exclude directories
+        run: |
+          zip -r release.zip -j ./BookClubApp.Presentation/build
+
       - name: Upload artifact for deployment
         uses: actions/upload-artifact@v2
         with:
