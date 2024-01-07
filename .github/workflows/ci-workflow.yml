@@ -100,20 +100,20 @@ jobs:
           npm run test --if-present
         working-directory: ./BookClubApp.Presentation
 
-      - name: List files to be uploaded
+      - name: Files to be uploaded
         run: |
-          find BookClubApp.Presentation -type f -print | grep -vE "node_modules|BookClubApp.Business|BookClubApp.DataAccess|Enums"
+          ls -R BookClubApp.Presentation/
          
       - name: Upload artifact for deployment
         uses: actions/upload-artifact@v2
         with:
           name: node-app
           path: |
-           ./BookClubApp.Presentation
-           !./BookClubApp.Presentation/node_modules
-           !./BookClubApp.Business
-           !./BookClubApp.DataAccess
-           !./Enums
+            BookClubApp.Presentation/build/**
+            BookClubApp.Presentation/package-lock.json
+            BookClubApp.Presentation/package.json
+            BookClubApp.Presentation/public/**
+            BookClubApp.Presentation/src/**
 
       - name: Download artifact
         uses: actions/download-artifact@v2
