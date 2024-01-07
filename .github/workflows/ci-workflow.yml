@@ -95,14 +95,10 @@ jobs:
 
       - name: npm install, build, and test
         run: |
-          npm install --legacy-peer-deps
+          npm install
           npm run build --if-present
           npm run test --if-present
         working-directory: ./BookClubApp.Presentation
-
-      - name: Files to be uploaded
-        run: |
-          ls -R BookClubApp.Presentation/
          
       - name: Upload artifact for deployment
         uses: actions/upload-artifact@v2
@@ -110,10 +106,8 @@ jobs:
           name: node-app
           path: |
             BookClubApp.Presentation/build/**
-            BookClubApp.Presentation/package-lock.json
             BookClubApp.Presentation/package.json
-            BookClubApp.Presentation/public/**
-            BookClubApp.Presentation/src/**
+            BookClubApp.Presentation/package-lock.json
 
       - name: Download artifact
         uses: actions/download-artifact@v2
@@ -125,4 +119,4 @@ jobs:
         with:
           app-name: mybookclub
           publish-profile: ${{ secrets.AZURE_FRONTED_PUBLISH_PROFILE }}
-          package: .
+          package: ./BookClubApp.Presentation/build
