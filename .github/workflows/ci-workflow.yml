@@ -107,8 +107,9 @@ jobs:
           path: |
            BookClubApp.Presentation/
            !BookClubApp.Presentation/node_modules/
-           !**/BookClubApp.Business/**
-           !**/BookClubApp.DataAccess/**
+           !BookClubApp.Business/**
+           !BookClubApp.DataAccess/**
+           !Enums/**
 
       - name: Download artifact
         uses: actions/download-artifact@v2
