@@ -107,7 +107,8 @@ jobs:
       
       - name: Create a ZIP file and exclude directories
         run: |
-          zip -r release.zip -j ./BookClubApp.Presentation/build
+          cd ./BookClubApp.Presentation
+          zip -r ../release.zip build package.json package-lock.json
 
       - name: Upload artifact for deployment
         uses: actions/upload-artifact@v2
