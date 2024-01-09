@@ -3,6 +3,7 @@ using BookClubApp.Business.Services;
 using BookClubApp.DataAccess.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace BookClubAPI.Controllers;
 
@@ -13,11 +14,12 @@ namespace BookClubAPI.Controllers;
 public class MemberController : ControllerBase
 {
     private readonly IMemberService _memberService;
+    private readonly ILogger<MemberController> _logger;
 
-    public MemberController(IMemberService memberService)
-
+    public MemberController(IMemberService memberService, ILogger<MemberController> logger)
     {
         _memberService = memberService;
+        _logger = logger;
     }
 
     [HttpGet("getmembers")]
@@ -25,23 +27,26 @@ public class MemberController : ControllerBase
     {
         try
         {
+            _logger.LogInformation("Getting all members");
             return Ok(await _memberService.GetMemberAsync());
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex, "Error getting all members");
             throw new Exception(ex.Message);
         }
-
     }
     [HttpGet("getmemberbyemail")]
     public async Task<IActionResult> GetMemberByEmail(string email)
     {
         try
         {
+            _logger.LogInformation("Getting member by email: {Email}", email);
             return Ok(await _memberService.GetMemberByEmailAsync(email));
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex, "Error getting member by email: {Email}", email);
             throw new Exception(ex.Message);
         }
     }
@@ -64,10 +69,12 @@ public class MemberController : ControllerBase
     {
         try
         {
+            _logger.LogInformation("Getting member ID by email: {Email}", email);
             return Ok(await _memberService.GetMemberIdByEmailAsync(email));
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex, "Error getting member ID by email: {Email}", email);
             throw new Exception(ex.Message);
         }
     }

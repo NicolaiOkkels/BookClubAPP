@@ -3,6 +3,7 @@ using BookClubApp.DataAccess.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace BookClubApp.Business.Controllers
 {
@@ -15,17 +16,20 @@ namespace BookClubApp.Business.Controllers
         private readonly IBookClubService _bookClubService;
         private readonly IRoleService _roleService;
         private readonly IMembershipService _membershipService;
+        private readonly ILogger<BookClubController> _logger;
 
-        public BookClubController(IBookClubService bookClubService, IRoleService roleService, IMembershipService membershipService)
+        public BookClubController(IBookClubService bookClubService, IRoleService roleService, IMembershipService membershipService, ILogger<BookClubController> logger) // Add logger to the constructor
         {
             _bookClubService = bookClubService;
             _roleService = roleService;
             _membershipService = membershipService;
+            _logger = logger;
         }
 
         [HttpGet("getclubs")]
         public async Task<IActionResult> GetBookClubs()
         {
+            _logger.LogInformation("Getting all book clubs");
             var bookClubs = await _bookClubService.GetBookClubsAsync();
             return Ok(bookClubs);
         }
