@@ -10,7 +10,7 @@ namespace BookClubApp.DataAccess.Data
         public ApplicationDbContext CreateDbContext(string[] args)
         {
             var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
-            optionsBuilder.UseSqlServer("Server=localhost,1433;Database=BookClubDB;User Id=sa;Password=QrGIQg3:QJ;TrustServerCertificate=true;");
+            optionsBuilder.UseSqlServer("Server=tcp:bookclub-sql-server.database.windows.net,1433;Initial Catalog=bookclub-sql-db;Persist Security Info=False;User ID=CloudSA941f200c;Password=hp%uSqOOT4G(=lZ;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
     
             return new ApplicationDbContext(optionsBuilder.Options);
         }
