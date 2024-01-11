@@ -45,7 +45,7 @@ builder.Services.RegisterBusinessLayerDependencies();
 builder.Services.RegisterJWT(builder.Configuration);
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("Database")));
+    options.UseSqlServer(builder.Configuration["ConnectionString"]));
 
 // Add services to the container.
 builder.Services.AddCors(options =>
