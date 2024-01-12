@@ -50,11 +50,10 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 // Add services to the container.
 builder.Services.AddCors(options =>
 {
-    var allowedOrigins = builder.Configuration["CorsOrigins"].Split(',');
     options.AddPolicy("AllowSpecificOrigin",
         builder =>
         {
-            builder.WithOrigins(allowedOrigins)
+            builder.WithOrigins("https://mybookclub.azurewebsites.net", "http://localhost:3000")
                    .AllowAnyHeader()
                    .AllowAnyMethod()
                    .AllowCredentials();
@@ -70,11 +69,8 @@ app.UseAuthorization();
 var scope = app.Services.CreateScope();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 

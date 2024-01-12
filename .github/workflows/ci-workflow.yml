@@ -14,6 +14,7 @@ jobs:
     env:
       AZURE_WEBAPP_BACKEND_PACKAGE_PATH: "./publish"
       AZURE_WEBAPP_BACKEND_NAME: bookclub-backend
+      DOTNET_VERSION: 7.0.x
 
     services:
       mssql:
@@ -28,9 +29,9 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v2
+        uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: 7.0.x
+          dotnet-version: ${{ env.DOTNET_VERSION }}
 
       - name: Restore dependencies
         run: dotnet restore ./BookClubAPP.sln
@@ -43,6 +44,9 @@ jobs:
 
       - name: Test Data Access
         run: dotnet test BookClubApp.DataAccess/Tests/BookClubApp.DataAccessLayer.Tests/BookClubApp.DataAccessLayer.Tests.csproj --no-restore
+
+      - name: Clean
+        run: dotnet clean ./BookClubAPP.sln --configuration Release
 
       - name: Build
         run: dotnet build ./BookClubAPP.sln --configuration Release --no-restore
@@ -67,8 +71,19 @@ jobs:
           # Add the IP to the SQL firewall (using Azure CLI)
           az sql server firewall-rule create --resource-group BookClub-Bachelor-2023 --server bookclub-sql-server --name "MigrationIP" --start-ip-address $runner_ip --end-ip-address $runner_ip
 
-      #- name: Run migrations
-      # run: dotnet ef database update --project BookClubApp.DataAccess/BookClubApp.DataAccess.csproj --connection "${{ secrets.AZURE_SQL_CONNECTION_STRING }}"
+      - name: Delete bin and obj for specific project directories
+        run: |
+          rm -rf ./BookClubApp.DataAccess/Tests/BookClubApp.DataAccessLayer.Tests/bin
+          rm -rf ./BookClubApp.DataAccess/Tests/BookClubApp.DataAccessLayer.Tests/obj
+          
+      - name: Clean Migration
+        run: dotnet clean ./BookClubApp.DataAccess/BookClubApp.DataAccess.csproj --configuration Release
+
+      - name: Build Migration
+        run: dotnet build ./BookClubApp.DataAccess/BookClubApp.DataAccess.csproj --configuration Release
+
+      - name: Run migrations
+        run: dotnet ef database update --project BookClubApp.DataAccess/BookClubApp.DataAccess.csproj --connection "${{ secrets.AZURE_SQL_CONNECTION_STRING }}"
 
       - name: Remove Firewall Rule
         if: always()
@@ -93,28 +108,34 @@ jobs:
         with:
           node-version: "20.x"
 
-      - name: Install dependencies
-        run: npm ci --legacy-peer-deps
-        working-directory: ./BookClubApp.Presentation
-
-      - name: Run Tests
-        run: npm run test --if-present
-        working-directory: ./BookClubApp.Presentation
-
-      - name: Build
-        run: npm run build --if-present
-        working-directory: ./BookClubApp.Presentation
-
-      - name: Create Zip Archive with build folder, package.json
+      - name: npm install, build, and test
         run: |
-          zip -r release.zip build package.json
+          npm install
+          npm run build --if-present
+          npm run test --if-present
+        env:
+          REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
+          REACT_APP_AUTH0_DOMAIN: ${{ secrets.REACT_APP_AUTH0_DOMAIN }}
+          REACT_APP_AUTH0_CLIENT_ID: ${{ secrets.REACT_APP_AUTH0_CLIENT_ID }}
+          REACT_APP_AUTH0_AUDIENCE_IDENTIFIER: ${{ secrets.REACT_APP_AUTH0_AUDIENCE_IDENTIFIER }}
+          REACT_APP_AUTH_TOKEN: ${{ secrets.REACT_APP_AUTH_TOKEN }}
         working-directory: ./BookClubApp.Presentation
+
+      - name: Copy files to build
+        run: |
+          cp ./BookClubApp.Presentation/package.json ./BookClubApp.Presentation/build/
+          cp ./BookClubApp.Presentation/package-lock.json ./BookClubApp.Presentation/build/
       
+      - name: Create a ZIP file and exclude directories
+        run: |
+          cd ./BookClubApp.Presentation
+          zip -r ../release.zip build package.json package-lock.json
+
       - name: Upload artifact for deployment
         uses: actions/upload-artifact@v2
         with:
           name: node-app
-          path: ./BookClubApp.Presentation/release.zip
+          path: release.zip
 
       - name: Download artifact
         uses: actions/download-artifact@v2
@@ -126,4 +147,4 @@ jobs:
         with:
           app-name: mybookclub
           publish-profile: ${{ secrets.AZURE_FRONTED_PUBLISH_PROFILE }}
-          package: ./BookClubApp.Presentation/release.zip
+          package: release.zip
