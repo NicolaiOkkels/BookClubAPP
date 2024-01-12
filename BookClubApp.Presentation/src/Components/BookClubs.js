@@ -67,7 +67,7 @@ const App = () => {
         memberId: memberId,
         isOpen: true,
         librariesId: Number(values.librariesId),
-        book: null
+        bookId: null
       };
       console.log(values);
       await api.post(`/BookClub/createclub`, values);
