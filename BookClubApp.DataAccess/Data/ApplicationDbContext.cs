@@ -83,6 +83,10 @@ namespace BookClubApp.DataAccess.Data
                 }
             );
 
+            modelBuilder.Entity<Role>().HasData(
+                new { Id = 1, Name = UserRole.Member.ToString() },
+                new { Id = 2, Name = UserRole.Owner.ToString() }
+            );
         }
     }
 }
