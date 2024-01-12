@@ -45,6 +45,9 @@ jobs:
       - name: Test Data Access
         run: dotnet test BookClubApp.DataAccess/Tests/BookClubApp.DataAccessLayer.Tests/BookClubApp.DataAccessLayer.Tests.csproj --no-restore
 
+      - name: Clean
+        run: dotnet clean ./BookClubAPP.sln --configuration Release
+
       - name: Build
         run: dotnet build ./BookClubAPP.sln --configuration Release --no-restore
 
@@ -67,9 +70,6 @@ jobs:
 
           # Add the IP to the SQL firewall (using Azure CLI)
           az sql server firewall-rule create --resource-group BookClub-Bachelor-2023 --server bookclub-sql-server --name "MigrationIP" --start-ip-address $runner_ip --end-ip-address $runner_ip
-
-      - name: Build Migration
-        run: dotnet build ./BookClubApp.DataAccess/BookClubApp.DataAccess.csproj --configuration Release
 
       - name: Run migrations
         run: dotnet ef database update --project BookClubApp.DataAccess/BookClubApp.DataAccess.csproj --connection "${{ secrets.AZURE_SQL_CONNECTION_STRING }}"
