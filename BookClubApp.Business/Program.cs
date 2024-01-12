@@ -53,7 +53,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowSpecificOrigin",
         builder =>
         {
-            builder.WithOrigins("https://mybookclub.azurewebsites.net", "http://localhost:3000")
+            builder.WithOrigins("https://mybookclub.azurewebsites.net") //http://localhost:3000 for development
                    .AllowAnyHeader()
                    .AllowAnyMethod()
                    .AllowCredentials();

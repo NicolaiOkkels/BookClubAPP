@@ -13,7 +13,6 @@ const useAuthApi = () => {
 
   const makeRequest = useCallback(async (method, url, data = null, config = {}) => {
     const token = await getAccessTokenSilently({ audience: "https://api.bookclub.com" });
-    console.log(`Final URL: ${apiUrl}${url}`);
     return apiClient({
       method,
       url,
